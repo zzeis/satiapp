@@ -9,7 +9,12 @@
 git clone https://github.com/zzeis/template-laravel10-docker.git nomeprojeto
 cd nomeprojeto
 ```
-2. Execute o ambiente Docker:
+2.  Configure o .env 
+```bash
+cp .env.example .env 
+```
+
+3. Execute o ambiente Docker:
 ```bash 
 docker-compose up -d
 ```

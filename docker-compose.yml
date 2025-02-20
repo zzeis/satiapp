@@ -10,7 +10,10 @@ services:
         working_dir: /var/www/
         volumes:
             - ./:/var/www
+        ports:
+            - "5173:5173"
         depends_on:
+       
             - redis
         networks:
             - laravel
@@ -48,9 +51,9 @@ services:
         restart: unless-stopped
         environment:
             MYSQL_DATABASE: ${DB_DATABASE:-laravel}
-            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
-            MYSQL_PASSWORD: ${DB_PASSWORD:-userpass}
-          
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root123}
+            MYSQL_PASSWORD: ${DB_PASSWORD:-laravel123}
+            MYSQL_USER: ${DB_USERNAME:-laravel}
         volumes:
             - ./.docker/mysql/dbdata:/var/lib/mysql
         ports:
