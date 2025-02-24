@@ -8,4 +8,36 @@ use Illuminate\Database\Eloquent\Model;
 class Movimentacoes extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'manutencao_id',
+        'user_id',
+        'acao',
+        'data',
+        'descricao',
+        'equipamento_id',
+
+    ];
+
+    public function equipamento()
+    {
+        return $this->belongsTo(Equipamento::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    public function manutencao()
+    {
+        return $this->belongsTo(Manutencao::class, 'id');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($movimentacoes) {
+            $movimentacoes->user_id = auth()->id();
+        });
+    }
 }
