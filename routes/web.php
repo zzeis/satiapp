@@ -27,7 +27,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('manutencao/create', [ManutencaoController::class, 'create'])->name('manutencao.create');
     Route::post('manutencao/store', [ManutencaoController::class, 'store'])->name('manutencao.store');
     Route::put('manutencao/update/{manutencao}', [ManutencaoController::class, 'update'])->name('manutencao.update');
-    Route::get('manutencao/retirada/{manutencao}', [ManutencaoController::class, 'registrarRetirada'])->name('manutencao.registrar-retirada');
+    // Rotas para manutenção
+    Route::put('/manutencao/{manutencao}/concluir', [ManutencaoController::class, 'concluir'])->name('manutencao.concluir');
+    Route::post('/manutencao/{manutencao}/retirar', [ManutencaoController::class, 'retirar'])->name('manutencao.retirar');
+    Route::put('/manutencao/{manutencao}/trocar', [ManutencaoController::class, 'trocar'])->name('manutencao.trocar');
+    Route::post('manutencao/retirada/{manutencao}', [ManutencaoController::class, 'registrarRetirada'])->name('manutencao.retirada');
+    Route::get('manutencao/gerenciar/{manutencao}', [ManutencaoController::class, 'gerenciarManutencao'])->name('manutencao.gerenciar');
+    // Rota para buscar detalhes da manutenção
+    Route::get('/manutencao/{manutencao}/detalhes', [ManutencaoController::class, 'detalhes'])->name('manutencao.detalhes');
+
+    // Rota para detalhes da manutenção
+Route::get('/manutencao/{manutencao}/informacoes', [ManutencaoController::class, 'informacoes'])->name('manutencao.informacoes');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
