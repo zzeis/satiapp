@@ -74,13 +74,7 @@ class Equipamento extends Model
             $equipamento->user_id = auth()->id();
         });
 
-        static::deleting(function ($equipamento) {
-            // Só modifica se for soft delete
-            if (!$equipamento->isForceDeleting()) {
-                $equipamento->numero_serie = $equipamento->numero_serie . '_deleted_' . time();
-                $equipamento->save();
-            }
-        });
+      
     }
 
     
