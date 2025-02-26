@@ -34,14 +34,14 @@ class EquipamentoController extends Controller
     public function store(Request $request)
     {
 
-        // Se o status for estoque,
-        if ($request->input('status') === 'estoque') {
+       
             $request->merge([
                 'secretaria_id' => 9,  // ID da SATI
                 'responsavel_id' => null,
-                'data_saida' => null
+                'data_saida' => null,
+                'status' => 'estoque',
             ]);
-        }
+        
         $validator = Validator::make($request->all(), [
             'secretaria_id' => 'required|exists:secretarias,id',
             'responsavel_id' => 'nullable|exists:pessoas,id',
@@ -150,5 +150,40 @@ class EquipamentoController extends Controller
         return redirect()
             ->route('equipamentos.trashed')
             ->with('success', 'Equipamento excluído permanentemente!');
+    }
+
+    public function buscarPorSerial(Request $request)
+    {
+        $request->validate([
+            'serial_number' => 'required|string',
+        ]);
+
+        // Busca o equipamento pelo número de série
+        $equipamento = Equipamento::with('tipo')
+            ->where('numero_serie', $request->serial_number)
+            ->first();
+
+        if ($equipamento) {
+            // Verifica se o equipamento está em estoque
+            if ($equipamento->status === 'estoque') {
+                return response()->json([
+                    'equipamento' => $equipamento,
+                    'message' => 'Equipamento encontrado.',
+                ]);
+            } else {
+                // Retorna o status do equipamento se não estiver em estoque
+                return response()->json([
+                    'equipamento' => null,
+                    'message' => 'Equipamento já está em uso.',
+                    'status' => $equipamento->status,
+                ], 200); // Código 200 para indicar que a requisição foi bem-sucedida, mas o equipamento não está disponível
+            }
+        } else {
+            // Equipamento não encontrado
+            return response()->json([
+                'equipamento' => null,
+                'message' => 'Equipamento não encontrado.',
+            ], 404); // Código 404 para indicar que o equipamento não foi encontrado
+        }
     }
 }
