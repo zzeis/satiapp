@@ -23,7 +23,7 @@
         <form action="{{ route('equipamentos.store') }}" method="POST" class="bg-white p-6 rounded-lg shadow-md">
             @csrf
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Coluna 1: Informações do Equipamento -->
                 <div class="space-y-4">
                     <h2 class="text-lg font-semibold mb-2">Informações do Equipamento</h2>
@@ -66,52 +66,11 @@
                             required>
                     </div>
 
-                    <div id="data_saida_container">
-                        <label for="data_saida" class="block text-sm font-medium text-gray-700">Data de Saída</label>
-                        <input type="date" name="data_saida" id="data_saida"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-
-                    <div>
-                        <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
-                        <select name="status" id="status"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                            required>
-                            <option value="">Selecione o status</option>
-                            <option value="manutencao">Manutenção</option>
-                            <option value="em_uso">Em Uso</option>
-                            <option value="estoque">Estoque</option>
-                        </select>
-                    </div>
+                    
+                  
                 </div>
 
-                <!-- Coluna 3: Localização e Responsável -->
-                <div class="space-y-4" id="localizacao_responsavel">
-                    <h2 class="text-lg font-semibold mb-2">Localização e Responsável</h2>
-
-                    <div>
-                        <label for="secretaria_id" class="block text-sm font-medium text-gray-700">Secretaria</label>
-                        <select name="secretaria_id" id="secretaria_id"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                            required>
-                            <option value="">Selecione uma secretaria</option>
-                            @foreach ($secretarias as $secretaria)
-                                <option value="{{ $secretaria->id }}">{{ $secretaria->nome }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div id="responsavel_container">
-                        <label for="responsavel_id" class="block text-sm font-medium text-gray-700">Responsável</label>
-                        <select name="responsavel_id" id="responsavel_id"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                            <option value="">Selecione um responsável</option>
-                            @foreach ($pessoas as $pessoa)
-                                <option value="{{ $pessoa->id }}">{{ $pessoa->nome }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
+              
             </div>
 
             <!-- Hidden input for SATI secretaria ID -->
