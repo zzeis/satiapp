@@ -27,7 +27,7 @@ class Manutencao extends Model
         'data_conclusao',
         'observacoes',
         'equipamento_novo_id',
-        'dados_equipamentos_antigo'
+        'dados_equipamento_antigo'
     ];
 
     public function equipamento()
@@ -53,6 +53,8 @@ class Manutencao extends Model
     {
         return $this->belongsTo(Equipamento::class, 'equipamento_novo_id');
     }
+
+    
     
     public function getEquipamentoInfoAttribute()
     {
