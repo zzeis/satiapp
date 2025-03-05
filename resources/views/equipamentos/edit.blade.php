@@ -26,7 +26,7 @@
             @csrf
             @method('PUT')
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Coluna 1: Informações do Equipamento -->
                 <div class="space-y-4">
                     <h2 class="text-lg font-semibold mb-2">Informações do Equipamento</h2>
@@ -54,13 +54,13 @@
                     <div>
                         <label for="tipo_equipamento_id" class="block text-sm font-medium text-gray-700">Tipo de
                             Equipamento</label>
-                        <select name="tipo" id="tipo_equipamento_id"
+                        <select name="tipo_id" id="tipo_equipamento_id"
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                             required>
                             <option value="">Selecione um tipo</option>
                             @foreach ($tiposEquipamento as $tipo)
                                 <option value="{{ $tipo->id }}"
-                                    {{ old('tipo', $equipamento->tipo) == $tipo->id ? 'selected' : '' }}>
+                                    {{ old('tipo', $equipamento->tipo->id) == $tipo->id ? 'selected' : '' }}>
                                     {{ $tipo->nome }}
                                 </option>
                             @endforeach
@@ -68,45 +68,11 @@
                     </div>
                 </div>
 
-                <!-- Coluna 2: Localização e Responsável -->
-                <div class="space-y-4">
-                    <h2 class="text-lg font-semibold mb-2">Localização e Responsável</h2>
 
-                    <!-- Secretaria -->
-                    <div>
-                        <label for="secretaria_id" class="block text-sm font-medium text-gray-700">Secretaria</label>
-                        <select name="secretaria_id" id="secretaria_id"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                            required>
-                            <option value="">Selecione uma secretaria</option>
-                            @foreach ($secretarias as $secretaria)
-                                <option value="{{ $secretaria->id }}"
-                                    {{ old('secretaria_id', $equipamento->secretaria_id) == $secretaria->id ? 'selected' : '' }}>
-                                    {{ $secretaria->sigla }} - {{ $secretaria->nome }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <!-- Responsável -->
-                    <div>
-                        <label for="responsavel_id" class="block text-sm font-medium text-gray-700">Responsável</label>
-                        <select name="responsavel_id" id="responsavel_id"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                            <option value="">Selecione um responsável</option>
-                            @foreach ($pessoas as $pessoa)
-                                <option value="{{ $pessoa->id }}"
-                                    {{ old('responsavel_id', $equipamento->responsavel_id) == $pessoa->id ? 'selected' : '' }}>
-                                    {{ $pessoa->nome }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
 
                 <!-- Coluna 3: Datas e Status -->
                 <div class="space-y-4">
-                    <h2 class="text-lg font-semibold mb-2">Datas e Status</h2>
+                    <h2 class="text-lg font-semibold mb-2">Data </h2>
 
                     <!-- Data de Entrada -->
                     <div>
@@ -114,46 +80,18 @@
                         <label for="data_entrada" class="block text-sm font-medium text-gray-700">Data de Chegada</label>
                         <input type="date" name="data_entrada" id="data_entrada"
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                            value="{{ old('data_entrada', $equipamento->data_chegada ? $equipamento->data_chegada->format('Y-m-d') : '') }}"
-                            </div>
-                        <!-- Data de Saída -->
-                        <div>
-                            <label for="data_saida" class="block text-sm font-medium text-gray-700">Data de Saída</label>
-                            <input type="date" name="data_saida" id="data_saida"
-                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                value="{{ old('data_saida', $equipamento->data_saida ? $equipamento->data_saida->format('Y-m-d') : '') }}">
-                        </div>
-
-                        <!-- Status -->
-                        <div>
-                            <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
-                            <select name="status" id="status"
-                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                required>
-                                <option value="">Selecione o status</option>
-                                <option value="manutencao"
-                                    {{ old('status', $equipamento->status) == 'manutencao' ? 'selected' : '' }}>Manutenção
-                                </option>
-                                <option value="em_uso"
-                                    {{ old('status', $equipamento->status) == 'em_uso' ? 'selected' : '' }}>
-                                    Em Uso</option>
-                                <option value="estoque"
-                                    {{ old('status', $equipamento->status) == 'estoque' ? 'selected' : '' }}>Estoque
-                                </option>
-                                <option value="descartado"
-                                    {{ old('status', $equipamento->status) == 'descartado' ? 'selected' : '' }}>Descartado
-                                </option>
-                            </select>
-                        </div>
+                            value="{{ old('data_entrada', $equipamento->data_chegada ? $equipamento->data_chegada->format('Y-m-d') : '') }}">
                     </div>
-                </div>
 
-                <!-- Botão de Envio -->
-                <div class="mt-6">
-                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
-                        Atualizar
-                    </button>
                 </div>
+            </div>
+
+            <!-- Botão de Envio -->
+            <div class="mt-6">
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                    Atualizar
+                </button>
+            </div>
         </form>
     </div>
 @endsection
