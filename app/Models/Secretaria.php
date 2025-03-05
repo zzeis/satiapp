@@ -8,4 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 class Secretaria extends Model
 {
     use HasFactory;
+
+
+       // Relacionamento com Pessoas
+       public function pessoas()
+       {
+           return $this->hasMany(Pessoa::class);
+       }
+       
+       // Relacionamento com TermoEntrega
+       public function termosEntrega()
+       {
+           return $this->hasMany(TermoEntrega::class);
+       }
 }
+
+
