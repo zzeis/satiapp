@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EquipamentoController;
 use App\Http\Controllers\ManutencaoController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TermoEntregaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,12 +22,33 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+//rotas Termo de entrega
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('TermoDeEntrega', [TermoEntregaController::class, 'index'])->name('termo.index');
+    Route::get('TermoDeEntrega/create', [TermoEntregaController::class, 'create'])->name('termo.create');
+    Route::post('TermoDeEntrega/store', [TermoEntregaController::class, 'store'])->name('termo.store');
+    Route::post('/TermoDeEntrega/{termoEntrega}/devolucao', [TermoEntregaController::class, 'devolucao'])->name('termo.devolucao');
 
+
+
+    Route::get('/TermoDeEntrega/{termoEntrega}/edit', [TermoEntregaController::class, 'edit'])->name('termo.edit');
+    Route::get('TermoDeEntrega/show/{termoEntrega}', [TermoEntregaController::class, 'show'])->name('termo.show');
+
+    Route::get('/TermoDeEntrega/previewpdf', [TermoEntregaController::class, 'previewPDF'])->name('termo.previewpdf');
+
+
+    Route::post('equipamento/check-serial', [EquipamentoController::class, 'store'])->name('equipamento.check-serial');
+
+});
+
+//rotas manutenção 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('manutencao', [ManutencaoController::class, 'index'])->name('manutencao.index');
     Route::get('manutencao/create', [ManutencaoController::class, 'create'])->name('manutencao.create');
     Route::post('manutencao/store', [ManutencaoController::class, 'store'])->name('manutencao.store');
     Route::put('manutencao/update/{manutencao}', [ManutencaoController::class, 'update'])->name('manutencao.update');
+    Route::put('manutencao/{manutencao}/destroy', [ManutencaoController::class, 'destroy'])->name('manutencao.destroy');
+
     // Rotas para manutenção
     Route::put('/manutencao/{manutencao}/concluir', [ManutencaoController::class, 'concluir'])->name('manutencao.concluir');
     Route::post('/manutencao/{manutencao}/retirar', [ManutencaoController::class, 'retirar'])->name('manutencao.retirar');
@@ -47,9 +69,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('equipamentos/store', [EquipamentoController::class, 'store'])->name('equipamentos.store');
     Route::put('equipamentos/update/{equipamento}', [EquipamentoController::class, 'update'])->name('equipamentos.update');
     Route::get('equipamentos/edit/{equipamento}', [EquipamentoController::class, 'edit'])->name('equipamentos.edit');
+    Route::get('equipamentos/detalhes/{equipamento}', [EquipamentoController::class, 'detalhes'])->name('equipamentos.detalhes');
+
     Route::delete('equipamentos/delete/{equipamento}', [EquipamentoController::class, 'destroy'])->name('equipamentos.destroy');
 
     Route::get('equipamentos-trashed', [EquipamentoController::class, 'trashed'])->name('equipamentos.trashed');
+    Route::post('/equipamento/buscar-por-serial', [EquipamentoController::class, 'buscarPorSerial'])->name('equipamento.buscar-por-serial');
 
     Route::patch('equipamentos-trashed/{id}/restore', [EquipamentoController::class, 'restore'])->name('equipamentos.restore');
     Route::delete('equipamentos-trashed/{id}/force-delete', [EquipamentoController::class, 'forceDelete'])->name('equipamentos.forceDelete');
