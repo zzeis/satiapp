@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProcessarTrocaEquipamento;
 use App\Models\Manutencao;
 use App\Models\Equipamento;
 use App\Models\Movimentacao;
@@ -9,19 +10,32 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SolicitacaoManutencao;
 use App\Models\Movimentacoes;
+use Illuminate\Support\Str; // Adicionando o import do Str
+
+use App\Models\Pessoa;
+use App\Models\TermoEntrega;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class ManutencaoController extends Controller
 {
     public function index(Request $request)
     {
         // Query base
-        $query = Manutencao::query();
+        $query = Manutencao::with(['equipamento', 'equipamentoNovo']);
 
         // Filtro por status
         if ($request->has('status') && $request->status != '') {
             $query->where('status', $request->status);
+
+            // Quando há filtro de status, ordenar por data mais recente
+            $query->orderBy('created_at', 'desc');
+        } else {
+            // Quando não há filtro, priorizar status 'aberto' e depois ordenar por data
+            $query->orderByRaw("CASE WHEN status = 'aberto' THEN 0 ELSE 1 END")
+                ->orderBy('created_at', 'desc');
         }
 
         // Pesquisa por número de série
@@ -47,13 +61,21 @@ class ManutencaoController extends Controller
         $request->validate([
             'numero_serie' => 'required|exists:equipamentos,numero_serie',
             'descricao_problema' => 'required|string',
-            'local' => 'nullable|string',
+            'local' => 'required|string',
             'observacoes' => 'nullable|string',
         ]);
 
         // Busca o equipamento pelo número de série
         $equipamento = Equipamento::where('numero_serie', $request->numero_serie)->first();
-
+        // Registra a movimentação de conclusão
+        Movimentacoes::create([
+    
+            'equipamento_id' => $equipamento->id,
+            'data' => Date::now(),
+            'acao' => 'abertura_manutencao',
+            'data_conclusao' => Date::now(),
+            'descricao' => 'Solicitação de manutenção.',
+        ]);
         // Cria a manutenção
         $manutencao = Manutencao::create([
             'equipamento_id' => $equipamento->id,
@@ -124,17 +146,15 @@ class ManutencaoController extends Controller
         return redirect()->route('manutencao.index')->with('success', 'Equipamento retirado para manutenção.');
     }
 
-    // Método para trocar o equipamento
+
     public function trocar(Manutencao $manutencao, Request $request)
     {
         // Validação dos dados da requisição
         $validated = $request->validate([
-            'numero_serie' => 'required|string|unique:equipamentos,numero_serie',
+            'numero_serie' => 'required|string',
             'modelo' => 'required|string',
             'observacoes' => 'nullable|string',
         ]);
-
-
 
         try {
             DB::beginTransaction();
@@ -144,7 +164,7 @@ class ManutencaoController extends Controller
                 ->findOrFail($manutencao->equipamento_id);
 
             // Verifica se os dados do equipamento antigo estão completos
-            if (!$equipamentoAntigo->tipo_id  || !$equipamentoAntigo->secretaria_id) {
+            if (!$equipamentoAntigo->tipo_id || !$equipamentoAntigo->secretaria_id) {
                 throw new \Exception('Dados incompletos no equipamento original. Verifique tipo, responsável e secretaria.');
             }
 
@@ -156,24 +176,92 @@ class ManutencaoController extends Controller
                 'tipo_nome' => $equipamentoAntigo->tipo->nome ?? 'N/A',
             ];
 
-            // Cria o novo equipamento com os dados do antigo
-            $novoEquipamento = new Equipamento([
-                'numero_serie' => $validated['numero_serie'],
-                'modelo' => $validated['modelo'],
-                'local' => $equipamentoAntigo->local,
-                'tipo_id' => $equipamentoAntigo->tipo_id,
-                'responsavel_id' => $equipamentoAntigo->responsavel_id,
-                'secretaria_id' => $equipamentoAntigo->secretaria_id,
-                'status' => 'em_uso',
-            ]);
+            $jsonDadosAntigos = json_encode($dadosEquipamentoAntigo, JSON_UNESCAPED_UNICODE);
+            if ($jsonDadosAntigos === false) {
+                throw new \Exception('Erro ao codificar dados do equipamento antigo: ' . json_last_error_msg());
+            }
 
-            // Salva o novo equipamento e verifica se foi criado com sucesso
-            if (!$novoEquipamento->save()) {
-                throw new \Exception('Falha ao salvar o novo equipamento.');
+            // Verifica se já existe um equipamento com este número de série
+            $equipamentoExistente = Equipamento::where('numero_serie', $validated['numero_serie'])->first();
+
+            if ($equipamentoExistente) {
+                // Usa o equipamento existente
+                $novoEquipamento = $equipamentoExistente;
+
+                // Atualiza alguns dados do equipamento existente se necessário
+                $novoEquipamento->update([
+                    'modelo' => $validated['modelo'],
+                    'local' => $equipamentoAntigo->local,
+                    'tipo_id' => $equipamentoAntigo->tipo_id,
+                    'responsavel_id' => $equipamentoAntigo->responsavel_id,
+                    'secretaria_id' => $equipamentoAntigo->secretaria_id,
+                    'status' => 'em_uso',
+                ]);
+            } else {
+                // Cria o novo equipamento com os dados do antigo
+                $novoEquipamento = new Equipamento([
+                    'numero_serie' => $validated['numero_serie'],
+                    'modelo' => $validated['modelo'],
+                    'data_chegada' => Date::now(),
+                    'local' => $equipamentoAntigo->local,
+                    'tipo_id' => $equipamentoAntigo->tipo_id,
+                    'responsavel_id' => $equipamentoAntigo->responsavel_id,
+                    'secretaria_id' => $equipamentoAntigo->secretaria_id,
+                    'status' => 'em_uso',
+                ]);
+
+                // Salva o novo equipamento e verifica se foi criado com sucesso
+                if (!$novoEquipamento->save()) {
+                    throw new \Exception('Falha ao salvar o novo equipamento.');
+                }
             }
 
             // Carrega os relacionamentos para usar nos logs
             $novoEquipamento->load(['tipo', 'responsavel', 'secretaria']);
+
+            // Encontra o termo de entrega que contém o equipamento antigo
+            $termoEquipamento = DB::table('termo_equipamentos')
+                ->where('equipamento_id', $equipamentoAntigo->id)
+                ->whereNull('deleted_at')
+                ->first();
+
+            // Se o equipamento estiver associado a um termo de entrega
+            if ($termoEquipamento) {
+                // Soft delete do registro antigo
+                DB::table('termo_equipamentos')
+                    ->where('id', $termoEquipamento->id)
+                    ->update([
+                        'deleted_at' => now()
+                    ]);
+
+                // Adiciona o novo equipamento ao termo
+                DB::table('termo_equipamentos')->insert([
+                    'termo_id' => $termoEquipamento->termo_id,
+                    'equipamento_id' => $novoEquipamento->id,
+                    'quantidade' => 1,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+
+                // Envia para a fila o processamento da atualização do PDF do termo
+
+                try {
+                    Log::info('Tentando despachar job', [
+                        'termo_id' => $termoEquipamento->termo_id,
+                        'novo_equipamento_id' => $novoEquipamento->id
+                    ]);
+
+                    ProcessarTrocaEquipamento::dispatch($termoEquipamento->termo_id, $novoEquipamento->id)->onQueue('termos');
+
+                    Log::info('Job despachada com sucesso');
+                } catch (\Exception $e) {
+                    Log::error('Erro ao despachar job', [
+                        'erro' => $e->getMessage(),
+                        'trace' => $e->getTraceAsString()
+                    ]);
+                }
+            }
+
 
             // Registra a movimentação da troca
             $movimentacao = new Movimentacoes([
@@ -213,20 +301,17 @@ class ManutencaoController extends Controller
                 $validated['observacoes'] ?? 'Nenhuma'
             );
 
-            // Salva os dados do equipamento antigo na manutenção para referência futura
-            $manutencao->dados_equipamento_antigo = json_encode($dadosEquipamentoAntigo);
-
-            // Atualiza o novo equipamento_id para apontar para o novo equipamento
-            $manutencao->equipamento_novo_id = $novoEquipamento->id;
-
-            // Atualiza a manutenção e verifica se foi atualizada com sucesso
-            if (!$manutencao->update([
+            // Preparando os dados para atualização
+            $dadosAtualizacao = [
                 'status' => 'concluido',
                 'data_conclusao' => Date::now(),
                 'observacoes' => $observacaoCompleta,
                 'equipamento_novo_id' => $novoEquipamento->id,
-                'dados_equipamento_antigo' => json_encode($dadosEquipamentoAntigo)
-            ])) {
+                'dados_equipamento_antigo' => $jsonDadosAntigos
+            ];
+
+            // Atualiza a manutenção com os dados restantes
+            if (!$manutencao->update($dadosAtualizacao)) {
                 throw new \Exception('Falha ao atualizar o status da manutenção.');
             }
 
@@ -238,7 +323,7 @@ class ManutencaoController extends Controller
             DB::commit();
             return redirect()
                 ->route('manutencao.index')
-                ->with('success', 'Equipamento trocado com sucesso.');
+                ->with('success', 'Equipamento trocado com sucesso. O termo de entrega será atualizado em breve.');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()
@@ -246,6 +331,7 @@ class ManutencaoController extends Controller
                 ->with('error', 'Erro ao realizar a troca do equipamento: ' . $e->getMessage());
         }
     }
+
 
     public function update(Manutencao $manutencao, Request $request)
     {
@@ -307,20 +393,20 @@ class ManutencaoController extends Controller
         if (!$manutencao) {
             return response()->json(['error' => 'Manutenção não encontrada'], 404);
         }
-        
+
         // Remova o dd() em produção - ele é só para debug
         // dd($manutencao);
-        
+
         // Verifica se existe um equipamento novo associado
-        $equipamento = $manutencao->equipamento_novo_id 
-            ? Equipamento::find($manutencao->equipamento_novo_id) 
+        $equipamento = $manutencao->equipamento_novo_id
+            ? Equipamento::find($manutencao->equipamento_novo_id)
             : $manutencao->equipamento;
-        
+
         // Se não encontrar nenhum equipamento
         if (!$equipamento) {
             return response()->json(['error' => 'Equipamento não encontrado'], 404);
         }
-        
+
         // Retorna os dados em JSON
         return response()->json([
             'local' => $manutencao->local,
@@ -333,14 +419,22 @@ class ManutencaoController extends Controller
     public function informacoes(Manutencao $manutencao)
     {
         // Carrega as relações necessárias
+        // Carrega as relações necessárias, incluindo registros excluídos (soft deleted)
         $manutencao->load([
-            'equipamento', // Equipamento relacionado
-            'equipamentoNovo', // Novo equipamento (se houver)
-            'movimentacoes', // Movimentações relacionadas
-            'movimentacoes.user', // Usuário que realizou a movimentação
-            'user', // Usuário que abriu a manutenção
+            'equipamento' => function ($query) {
+                $query->withTrashed(); // Inclui equipamentos excluídos
+            },
+            'equipamento.responsavel',
+            'equipamentoNovo' => function ($query) {
+                $query->withTrashed(); // Inclui equipamentos novos excluídos
+            },
+            'movimentacoes',
+            // 'movimentacoes.equipamento' => function ($query){
+            //     $query->withTrashed();
+            // },
+            'movimentacoes.user',
+            'user',
         ]);
-
 
         return view('manutencao.informacoes', compact('manutencao'));
     }
