@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignUuid('secretaria_id')->constrained();
             $table->string('nome');
             $table->string('cpf', 11)->unique();
-            $table->string('cargo');
+            $table->string('cargo')->nullable();
             $table->timestamps();
             $table->softDeletes();
             
