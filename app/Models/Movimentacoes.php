@@ -15,6 +15,7 @@ class Movimentacoes extends Model
         'data',
         'descricao',
         'equipamento_id',
+        'termo_id'
 
     ];
 
