@@ -6,8 +6,9 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Manutencao;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SolicitacaoManutencao extends Mailable
+class SolicitacaoManutencao extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
