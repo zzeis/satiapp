@@ -22,6 +22,30 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/preview-email', function () {
+    // Dados fictícios para a view
+    $manutencao = (object) [
+        'equipamento' => (object) [
+            'tipo' => (object) ['nome' => 'Tipo de Equipamento'],
+            'modelo' => 'Modelo XYZ',
+            'numero_serie' => '123456',
+        ],
+        'descricao_problema' => 'Problema de teste',
+        'secretaria' => (object) ['nome' => 'Secretaria de Teste'],
+        'local' => 'Local de Teste',
+        'observacoes' => 'Observações de teste',
+    ];
+
+    // Simular a variável $message
+    $message = new \Illuminate\Mail\Message(new \Symfony\Component\Mime\Email());
+    $message->embed(public_path('images/logo.png'), 'logo');
+
+    return view('emails.solicitacao_manutencao', [
+        'manutencao' => $manutencao,
+        'message' => $message,
+    ]);
+});
+
 //rotas Termo de entrega
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('TermoDeEntrega', [TermoEntregaController::class, 'index'])->name('termo.index');
