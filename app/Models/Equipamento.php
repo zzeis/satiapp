@@ -46,14 +46,15 @@ class Equipamento extends Model
         return $this->belongsTo(Pessoa::class, 'responsavel_id');
     }
 
-    public function termos()
+    public function movimentacoes()
     {
-        return $this->hasMany(TermoEntrega::class);
+        return $this->hasMany(Movimentacoes::class , 'equipamento_id');
     }
+
 
     public function manutencoes()
     {
-        return $this->hasMany(Manutencao::class);
+        return $this->hasMany(Manutencao::class , 'equipamento_id');
     }
 
     public function user()
@@ -65,7 +66,7 @@ class Equipamento extends Model
     {
         return $this->belongsTo(TipoEquipamento::class, 'tipo_id');
     }
-    
+
     protected static function boot()
     {
         parent::boot();
@@ -73,9 +74,23 @@ class Equipamento extends Model
         static::creating(function ($equipamento) {
             $equipamento->user_id = auth()->id();
         });
-
-      
     }
 
-    
+      /**
+     * Mutator para o campo "modelo".
+     * Converte o valor para maiúsculas antes de salvar no banco de dados.
+     *
+     * @param string $value
+     */
+    public function setModeloAttribute($value)
+    {
+        $this->attributes['modelo'] = strtoupper($value);
+    }
+
+    public function termos()
+    {
+        return $this->belongsToMany(TermoEntrega::class, 'termo_equipamentos', 'equipamento_id', 'termo_id')
+            ->withPivot('quantidade') // Adiciona a coluna 'quantidade' ao relacionamento
+            ->withTimestamps(); // Adiciona os timestamps ao relacionamento
+    }
 }
