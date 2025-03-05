@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Equipamento;
+
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,18 +14,45 @@ class TermoEntrega extends Model
     protected $fillable = [
         'arquivo_path',
         'data_entrega',
-        'observacoes'
+        'observacoes' ,
+        'responsavel_id',
+        'secretaria_id',
+        'user_id',
+        'data_devolucao',
+        'user_devolucao_id',
+        'observacoes',
+        'status'
     ];
 
-    public function equipamento() {
+    public function equipamento()
+    {
         return $this->belongsTo(Equipamento::class);
     }
 
-    public function responsavel() {
+    public function secretaria()
+    {
+        return $this->belongsTo(Secretaria::class);
+    }
+
+    public function responsavel()
+    {
         return $this->belongsTo(Pessoa::class, 'responsavel_id');
     }
 
-    public function usuario() {
+    public function usuario()
+    {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function equipamentos()
+    {
+        return $this->belongsToMany(Equipamento::class, 'termo_equipamentos', 'termo_id', 'equipamento_id')
+            ->withPivot('quantidade') // Adiciona a coluna 'quantidade' ao relacionamento
+            ->withTimestamps(); // Adiciona os timestamps ao relacionamento
+    }
+
+    public function usuarioDevolucao()
+{
+    return $this->belongsTo(User::class, 'user_devolucao_id');
+}
 }
