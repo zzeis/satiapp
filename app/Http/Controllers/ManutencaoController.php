@@ -89,8 +89,9 @@ class ManutencaoController extends Controller
         ]);
 
         // Envia e-mail para a empresa terceirizada
-        Mail::to('posygame@gmail.com')->send(new SolicitacaoManutencao($manutencao));
-
+        Mail::to('posygame@gmail.com')->queue(
+            (new SolicitacaoManutencao($manutencao))->onQueue('redis')
+        );
         return redirect()->route('manutencao.index')->with('success', 'Chamado aberto com sucesso!');
     }
 
@@ -251,7 +252,7 @@ class ManutencaoController extends Controller
                         'novo_equipamento_id' => $novoEquipamento->id
                     ]);
 
-                    ProcessarTrocaEquipamento::dispatch($termoEquipamento->termo_id, $novoEquipamento->id)->onQueue('termos');
+                    ProcessarTrocaEquipamento::dispatch($termoEquipamento->termo_id, $novoEquipamento->id)->onQueue('redis');
 
                     Log::info('Job despachada com sucesso');
                 } catch (\Exception $e) {
