@@ -223,4 +223,29 @@ class EquipamentoController extends Controller
             ], 404); // Código 404 para indicar que o equipamento não foi encontrado
         }
     }
+
+    public function filtrar(Request $request)
+    {
+        $query = Equipamento::query();
+
+        if ($request->numero_serie) {
+            $query->where('numero_serie', 'like', '%' . $request->numero_serie . '%');
+        }
+
+        if ($request->tipo_id) {
+            $query->where('tipo_id', $request->tipo_id);
+        }
+
+        if ($request->status) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->secretaria_id) {
+            $query->where('secretaria_id', $request->secretaria_id);
+        }
+
+        $equipamentos = $query->paginate(10, ['id', 'numero_serie', 'modelo']);
+
+        return response()->json($equipamentos);
+    }
 }
