@@ -62,7 +62,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
     Route::post('equipamento/check-serial', [EquipamentoController::class, 'store'])->name('equipamento.check-serial');
-
 });
 
 //rotas manutenção 
@@ -82,8 +81,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Rota para buscar detalhes da manutenção
     Route::get('/manutencao/{manutencao}/detalhes', [ManutencaoController::class, 'detalhes'])->name('manutencao.detalhes');
 
+
+
+    Route::get('/equipamentos/filtrar', [EquipamentoController::class, 'filtrar']);
     // Rota para detalhes da manutenção
-Route::get('/manutencao/{manutencao}/informacoes', [ManutencaoController::class, 'informacoes'])->name('manutencao.informacoes');
+    Route::get('/manutencao/{manutencao}/informacoes', [ManutencaoController::class, 'informacoes'])->name('manutencao.informacoes');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
