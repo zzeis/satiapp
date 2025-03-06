@@ -13,7 +13,9 @@ use App\Models\Movimentacoes;
 use Illuminate\Support\Str; // Adicionando o import do Str
 
 use App\Models\Pessoa;
+use App\Models\Secretaria;
 use App\Models\TermoEntrega;
+use App\Models\TipoEquipamento;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -53,8 +55,15 @@ class ManutencaoController extends Controller
 
     public function create()
     {
-        return view('manutencao.create');
+
+        $tiposEquipamentos = TipoEquipamento::all();
+        $secretarias = Secretaria::all();
+    
+        return view('manutencao.create', compact('tiposEquipamentos', 'secretarias'));
+        
     }
+
+    
 
     public function store(Request $request)
     {
