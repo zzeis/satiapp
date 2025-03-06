@@ -120,6 +120,7 @@
         </div>
     </div>
 
+    @if(isset($termo))
     <!-- Modal de Devolução -->
     <div id="modal-devolucao" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center">
         <div class="bg-white rounded-lg shadow-lg w-11/12 md:w-1/2 p-6">
@@ -145,7 +146,7 @@
             </form>
         </div>
     </div>
-
+    @endif
     <!-- Script para Controlar o Modal -->
     <script>
         function openModal(termoId) {
