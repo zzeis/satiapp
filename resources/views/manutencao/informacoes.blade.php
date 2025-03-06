@@ -40,6 +40,11 @@
                 </div>
                 <div class="bg-gray-50 p-4 rounded-lg">
 
+                    <label class="block text-sm font-medium text-gray-700">Local Especificado</label>
+                    <p class="mt-1 text-gray-900">{{ $manutencao->local }}</p>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg">
+
                     <label class="block text-sm font-medium text-gray-700">Aberto por</label>
                     <p class="mt-1 text-gray-900">{{ $manutencao->user->name }}</p>
                 </div>
@@ -73,6 +78,11 @@
 
                         <label class="block text-sm font-medium text-gray-700">Responsável</label>
                         <p class="mt-1 text-gray-900">{{ $manutencao->equipamento->responsavel->nome ?? 'N/A' }}</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg">
+
+                        <label class="block text-sm font-medium text-gray-700">Secretaria</label>
+                        <p class="mt-1 text-gray-900">{{ $manutencao->equipamento->secretaria->nome ?? 'N/A' }}</p>
                     </div>
                 @elseif ($manutencao->equipamento_novo_id)
                     <div class="bg-gray-50 p-4 rounded-lg">
