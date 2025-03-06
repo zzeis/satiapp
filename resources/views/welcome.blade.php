@@ -5,11 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Satiapp - Bem-vindo</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+    <style>
+        .blue-logo{
+            background-color: #013e91;
+        }
+    </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
     <div class="bg-white rounded-lg shadow-lg flex flex-col md:flex-row overflow-hidden max-w-4xl w-full">
         <!-- Bloco do Logo -->
-        <div class="bg-gray-300 p-8 flex items-center justify-center md:w-1/2">
+        <div class="blue-logo p-8 flex items-center justify-center md:w-1/2">
             <img src="{{ asset('images/LogoSATI.png') }}" alt="Logo" class="h-40 w-auto">
         </div>
 
