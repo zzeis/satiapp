@@ -23,8 +23,7 @@ class TiposEquipamentosTableSeeder extends Seeder
             ['id' => 11, 'nome' => 'MONITOR - 1 CABO A/C - 1 CABO HDMI'],
         ];
 
-        // Limpa a tabela antes de inserir
-        DB::table('tipos_equipamentos')->truncate();
+       
 
         // Insere os dados
         DB::table('tipos_equipamentos')->insert($tipos_equipamentos);

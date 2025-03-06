@@ -25,8 +25,7 @@ class SecretariasTableSeeder extends Seeder
             ['id' => 9, 'nome' => 'SECRETARIA ADJUNTO DE INOVAÇÃO E TECNOLOGIA', 'sigla' => 'SATI'],
         ];
 
-        // Limpa a tabela antes de inserir
-        DB::table('secretarias')->truncate();
+      
 
         // Insere os dados
         DB::table('secretarias')->insert($secretarias);
