@@ -30,9 +30,7 @@ class EquipamentoController extends Controller
                     $q->where('nome', 'like', "%{$search}%")
                       ->orWhere('cpf', 'like', "%{$search}%");
                 })
-                ->orWhereHas('equipamentos', function ($q) use ($search) {
-                    $q->where('numero_serie', 'like', "%{$search}%");
-                });
+                ->orWhere('numero_serie', 'like', "%{$search}%"); // Consulta dir
             });
         })
         ->when($status !== null, function ($query) use ($status) {
