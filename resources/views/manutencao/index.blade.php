@@ -174,7 +174,7 @@
 
 
             <!-- Paginação -->
-            <div class="mt-4">
+            <div class="mt-4 text-center p-4 mx-auto">
                 {{ $manutencoes->links() }}
             </div>
         </div>

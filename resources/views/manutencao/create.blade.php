@@ -93,8 +93,8 @@
                             type="submit"
                             class="flex items-center bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
                         >
-                            <i data-lucide="plus" class="w-5 h-5 mr-2"></i>
-                            Abrir Chamado
+                        <i data-lucide="save" class="w-5 h-5 mr-2"></i>
+                            Finalizar
                         </button>
                     </div>
                 </div>
