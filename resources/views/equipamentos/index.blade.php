@@ -48,7 +48,7 @@
                         <label for="search" class="block text-sm font-medium text-gray-700">Pesquisar</label>
                         <input type="text" name="search" id="search"
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                            placeholder="Número de série, nome ou CPF" value="{{ request('search') }}">
+                            placeholder="Número de série, Modelo" value="{{ request('search') }}">
                     </div>
 
                     <!-- Botão de Pesquisa -->
