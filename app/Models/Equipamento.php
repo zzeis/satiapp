@@ -87,6 +87,11 @@ class Equipamento extends Model
         $this->attributes['modelo'] = strtoupper($value);
     }
 
+    public function setNumeroSerieAttribute($value)
+    {
+        $this->attributes['numero_serie'] = strtoupper($value);
+    }
+
     public function termos()
     {
         return $this->belongsToMany(TermoEntrega::class, 'termo_equipamentos', 'equipamento_id', 'termo_id')
