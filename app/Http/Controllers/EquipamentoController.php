@@ -30,14 +30,15 @@ class EquipamentoController extends Controller
                     $q->where('nome', 'like', "%{$search}%")
                       ->orWhere('cpf', 'like', "%{$search}%");
                 })
-                ->orWhere('numero_serie', 'like', "%{$search}%"); // Consulta dir
+                ->orWhere('numero_serie', 'like', "%{$search}%")
+                ->orWhere('modelo' , 'like', "%{$search}%"); // Consulta dir
             });
         })
         ->when($status !== null, function ($query) use ($status) {
             return $query->where('status', $status);
         })
-        ->orderBy('data_chegada', 'desc')
-        ->paginate(10);
+        ->orderBy('created_at', 'desc')
+        ->paginate(15);
             $secretarias = Secretaria::all();
 
         return view('equipamentos.index', compact('equipamentos','secretarias'));
