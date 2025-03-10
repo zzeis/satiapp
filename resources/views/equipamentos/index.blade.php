@@ -67,7 +67,7 @@
                             Filtrar
                         </button>
                         <a href="{{ route('equipamentos.index') }}"
-                            class="ml-2 bg-gray-500 text-white px-3 py-1 rounded-md hover:bg-gray-600 min-w-[80px] text-center text-sm">
+                            class="ml-2 bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
                             Limpar
                         </a>
                     </div>
@@ -99,7 +99,6 @@
                             <td class=" text-center px-6 py-4 text-sm text-gray-700"><a class="text-blue-500"
                                     href="{{ route('equipamentos.detalhes', $equipamento->id) }}">
                                     {{ $equipamento->numero_serie }}</a></td>
-
                             <td class="text-center px-6 py-4 text-sm text-gray-700">{{ $equipamento->tipo->nome }}</td>
 
                             <td class="text-center px-6 py-4 text-sm text-gray-700">{{ $equipamento->modelo }}</td>

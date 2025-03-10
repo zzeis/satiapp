@@ -82,14 +82,17 @@
                 <tbody class="divide-y divide-gray-200">
                     @forelse ($termos as $termo)
                         <tr class="hover:bg-gray-50 transition duration-300">
-                            <td class="px-6 py-4 text-sm text-gray-700">{{ $termo->responsavel->nome }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700"> <a href="{{ route('termo.show', $termo->id) }}"
+                                    class="text-blue-600">
+
+                                    {{ $termo->responsavel->nome }}</a></td>
                             <td class="px-6 py-4 text-sm text-gray-700">{{ $termo->responsavel->cpf }}</td>
                             <td class="px-6 py-4 text-sm text-gray-700">{{ $termo->secretaria->nome }}</td>
                             <td class="px-6 py-4 text-sm text-gray-700">
                                 {{ \Carbon\Carbon::parse($termo->data_entrega)->format('d/m/Y') }}</td>
                             <td class="px-6 py-4 text-sm text-gray-700">
                                 @if ($termo->status)
-                                    <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full">Em uso</span>
+                                    <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full">Ativo</span>
                                 @else
                                     <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full">Devolvido</span>
                                 @endif
@@ -100,7 +103,8 @@
                                 </a>
                                 <!-- Ícone de Devolução -->
                                 @if ($termo->status)
-                                    <a href="#devolucao" class="text-yellow-500" onclick="openModal('{{ $termo->id }}')">
+                                    <a href="#devolucao" class="text-yellow-500"
+                                        onclick="openModal('{{ $termo->id }}')">
                                         <i data-lucide="undo-2"></i>
                                     </a>
                                 @endif
@@ -121,32 +125,34 @@
         </div>
     </div>
 
-    @if(isset($termo))
-    <!-- Modal de Devolução -->
-    <div id="modal-devolucao" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center">
-        <div class="bg-white rounded-lg shadow-lg w-11/12 md:w-1/2 p-6">
-            <h2 class="text-xl font-bold mb-4">Registrar Devolução</h2>
-            <form id="form-devolucao" method="POST" action="{{ route('termo.devolucao', ['termoEntrega' => $termo->id]) }}">
-                @csrf
-                <input type="hidden" name="termo_id" id="termo_id">
-                <div class="mb-4">
-                    <label for="observacoes_devolucao" class="block text-sm font-medium text-gray-700">Observações</label>
-                    <textarea name="observacoes_devolucao" id="observacoes_devolucao" rows="4"
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="Digite as observações sobre a devolução"></textarea>
-                </div>
-                <div class="flex justify-end">
-                    <button type="button" onclick="closeModal()"
-                        class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 mr-2">
-                        Cancelar
-                    </button>
-                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
-                        Confirmar Devolução
-                    </button>
-                </div>
-            </form>
+    @if (isset($termo))
+        <!-- Modal de Devolução -->
+        <div id="modal-devolucao" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center">
+            <div class="bg-white rounded-lg shadow-lg w-11/12 md:w-1/2 p-6">
+                <h2 class="text-xl font-bold mb-4">Registrar Devolução</h2>
+                <form id="form-devolucao" method="POST"
+                    action="{{ route('termo.devolucao', ['termoEntrega' => $termo->id]) }}">
+                    @csrf
+                    <input type="hidden" name="termo_id" id="termo_id">
+                    <div class="mb-4">
+                        <label for="observacoes_devolucao"
+                            class="block text-sm font-medium text-gray-700">Observações</label>
+                        <textarea name="observacoes_devolucao" id="observacoes_devolucao" rows="4"
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="Digite as observações sobre a devolução"></textarea>
+                    </div>
+                    <div class="flex justify-end">
+                        <button type="button" onclick="closeModal()"
+                            class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 mr-2">
+                            Cancelar
+                        </button>
+                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                            Confirmar Devolução
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
     @endif
     <!-- Script para Controlar o Modal -->
     <script>

@@ -15,33 +15,35 @@ class EquipamentoController extends Controller
     public function index(Request $request)
     {
         // Filtros
-    $secretariaId = $request->input('secretaria');
-    $search = $request->input('search');
-    $status = $request->input('status'); // Novo filtro por status
+        $secretariaId = $request->input('secretaria');
+        $search = $request->input('search');
+        $status = $request->input('status');
 
-    // Consulta
-    $equipamentos = Equipamento::with(['responsavel', 'user', 'secretaria'])
-        ->when($secretariaId, function ($query, $secretariaId) {
-            return $query->where('secretaria_id', $secretariaId);
-        })
-        ->when($search, function ($query, $search) {
-            return $query->where(function ($q) use ($search) {
-                $q->whereHas('responsavel', function ($q) use ($search) {
-                    $q->where('nome', 'like', "%{$search}%")
-                      ->orWhere('cpf', 'like', "%{$search}%");
-                })
-                ->orWhere('numero_serie', 'like', "%{$search}%")
-                ->orWhere('modelo' , 'like', "%{$search}%"); // Consulta dir
-            });
-        })
-        ->when($status !== null, function ($query) use ($status) {
-            return $query->where('status', $status);
-        })
-        ->orderBy('created_at', 'desc')
-        ->paginate(15);
-            $secretarias = Secretaria::all();
+        // Consulta
+        $equipamentos = Equipamento::with(['responsavel', 'user', 'secretaria'])
+            ->when($secretariaId, function ($query, $secretariaId) {
+                return $query->where('secretaria_id', $secretariaId);
+            })
+            ->when($search, function ($query, $search) {
+                return $query->where(function ($q) use ($search) {
+                    $q->whereHas('responsavel', function ($subquery) use ($search) {
+                        $subquery->where('nome', 'like', "%{$search}%")
+                            ->orWhere('cpf', 'like', "%{$search}%");
+                    })
+                        ->orWhere('numero_serie', 'like', "%{$search}%")
+                        ->orWhere('modelo', 'like', "%{$search}%");
+                });
+            })
+            ->when($status, function ($query, $status) { // Modificado: adicionada a variável $status como parâmetro
+                return $query->where('status', $status);
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(10)
+            ->appends($request->except('page')); // Mantém os filtros ao navegar pelas páginas
 
-        return view('equipamentos.index', compact('equipamentos','secretarias'));
+        $secretarias = Secretaria::all();
+
+        return view('equipamentos.index', compact('equipamentos', 'secretarias'));
     }
 
     public function create()
@@ -57,14 +59,14 @@ class EquipamentoController extends Controller
     public function store(Request $request)
     {
 
-       
-            $request->merge([
-                'secretaria_id' => 9,  // ID da SATI
-                'responsavel_id' => null,
-                'data_saida' => null,
-                'status' => 'estoque',
-            ]);
-        
+
+        $request->merge([
+            'secretaria_id' => 9,  // ID da SATI
+            'responsavel_id' => null,
+            'data_saida' => null,
+            'status' => 'estoque',
+        ]);
+
         $validator = Validator::make($request->all(), [
             'secretaria_id' => 'required|exists:secretarias,id',
             'responsavel_id' => 'nullable|exists:pessoas,id',
@@ -98,21 +100,21 @@ class EquipamentoController extends Controller
         return view('equipamentos.show', compact('equipamento'));
     }
 
-  // Função para exibir detalhes da manutenção
-  public function detalhes(Equipamento $equipamento)
-  {
-      // Carrega as relações necessárias
-      $equipamento->load([
-          'manutencoes', // Novo equipamento (se houver)
-          'movimentacoes', // Movimentações relacionadas
-          'movimentacoes.user', // Usuário que realizou a movimentação
-          'user',
-      ]);
+    // Função para exibir detalhes da manutenção
+    public function detalhes(Equipamento $equipamento)
+    {
+        // Carrega as relações necessárias
+        $equipamento->load([
+            'manutencoes', // Novo equipamento (se houver)
+            'movimentacoes', // Movimentações relacionadas
+            'movimentacoes.user', // Usuário que realizou a movimentação
+            'user',
+        ]);
 
-      
 
-      return view('equipamentos.detalhes', compact('equipamento'));
-  }
+
+        return view('equipamentos.detalhes', compact('equipamento'));
+    }
 
     public function edit(Equipamento $equipamento)
     {
@@ -127,12 +129,12 @@ class EquipamentoController extends Controller
     public function update(Request $request, Equipamento $equipamento)
     {
         $validator = Validator::make($request->all(), [
-       
+
             'tipo_id' => 'required|string|max:255',
             'numero_serie' => 'required|string|unique:equipamentos,numero_serie,' . $equipamento->id,
             'modelo' => 'required|string|max:255',
-       
-            'data_chegada' => 'nullable|date', 
+
+            'data_chegada' => 'nullable|date',
         ]);
 
         if ($validator->fails()) {

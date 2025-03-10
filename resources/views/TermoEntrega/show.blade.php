@@ -34,13 +34,22 @@
                                     class="text-gray-600">{{ $termoEntrega->created_at->format('d/m/Y H:i') }}</span></p>
                             <p><strong class="text-gray-700">Usuário Responsável:</strong> <span
                                     class="text-gray-600">{{ $termoEntrega->usuario->name }}</span></p>
-                            @if ($termoEntrega->arquivo_path)
-                                <p>
-                                    <strong class="text-gray-700">Arquivo:</strong>
-                                    <a href="{{ asset($termoEntrega->arquivo_path) }}" target="_blank"
-                                        class="text-blue-500 hover:text-blue-700 underline">Visualizar</a>
-                                </p>
-                            @endif
+
+                            <!-- Verificação dinâmica do processamento -->
+                            <div id="processamento-status">
+                                @if ($termoEntrega->processado)
+                                    <p>
+                                        <strong class="text-gray-700">Arquivo:</strong>
+                                        <a href="{{ asset($termoEntrega->arquivo_path) }}" target="_blank"
+                                            class="text-blue-500 hover:text-blue-700 underline">Visualizar</a>
+                                    </p>
+                                @else
+                                    <div class="flex items-center space-x-2">
+                                        <div class="animate-spin h-5 w-5 border-t-2 border-blue-500 rounded-full"></div>
+                                        <span class="text-gray-600">O PDF do termo está sendo processado...</span>
+                                    </div>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -75,24 +84,17 @@
                     </div>
                 </div>
 
-
-                <!-- devolução -->
+                <!-- Devolução -->
                 @if ($termoEntrega->observacoes && $termoEntrega->status == false)
                     <div class="mb-8">
                         <h4 class="text-xl font-semibold text-gray-800 mb-4">Devolução</h4>
-                        <p class="mb-5"> <strong class="text-gray-700">Data de devolução:</strong> {{ \Carbon\Carbon::parse($termoEntrega->data_devolucao)->format('d/m/Y') }}</p>
-                        <p class="mb-5"> <strong class="text-gray-700">Usuário Responsável:</strong> 
+                        <p class="mb-5"> <strong class="text-gray-700">Data de devolução:</strong>
+                            {{ \Carbon\Carbon::parse($termoEntrega->data_devolucao)->format('d/m/Y') }}</p>
+                        <p class="mb-5"> <strong class="text-gray-700">Usuário Responsável:</strong>
                             {{ $termoEntrega->usuarioDevolucao ? $termoEntrega->usuarioDevolucao->name : 'N/A' }}
                         </p>
-
                         <p> <strong class="text-gray-700">Observações:</strong> {{ $termoEntrega->observacoes }}</p>
-
-
-
                     </div>
-                  
-
-                   
                 @endif
 
                 <!-- Botões de Ação -->
@@ -105,4 +107,34 @@
             </div>
         </div>
     </div>
+
+    <!-- Script para verificação dinâmica do processamento -->
+    <script>
+        function verificarProcessamento() {
+            fetch("{{ route('termo.verificar_processamento', $termoEntrega->id) }}")
+                .then(response => response.json())
+                .then(data => {
+                    if (data.processado) {
+                        // Atualiza o conteúdo da div com o link para o arquivo
+                        document.getElementById('processamento-status').innerHTML = `
+                            <p>
+                                <strong class="text-gray-700">Arquivo:</strong>
+                                <a href="${data.arquivo_path}" target="_blank"
+                                    class="text-blue-500 hover:text-blue-700 underline">Visualizar</a>
+                            </p>
+                        `;
+                        console.log(data);
+                    } else {
+                        // Continua verificando após 5 segundos
+                        setTimeout(verificarProcessamento, 5000);
+                    }
+                })
+                .catch(error => console.error('Erro ao verificar processamento:', error));
+        }
+
+        // Inicia a verificação se o termo ainda não estiver processado
+        @if (!$termoEntrega->processado)
+            setTimeout(verificarProcessamento, 5000);
+        @endif
+    </script>
 @endsection

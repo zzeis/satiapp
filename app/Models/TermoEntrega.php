@@ -11,6 +11,7 @@ class TermoEntrega extends Model
 {
     use HasUlids;
 
+    protected $keyType = 'string'; 
     protected $fillable = [
         'arquivo_path',
         'data_entrega',
@@ -21,7 +22,9 @@ class TermoEntrega extends Model
         'data_devolucao',
         'user_devolucao_id',
         'observacoes',
-        'status'
+        'status',
+        'processado'
+        
     ];
 
     public function equipamento()
