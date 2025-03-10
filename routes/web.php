@@ -54,6 +54,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/TermoDeEntrega/{termoEntrega}/devolucao', [TermoEntregaController::class, 'devolucao'])->name('termo.devolucao');
 
 
+    // No arquivo routes/web.php
+    Route::get('TermoDeEntrega/verificar-processamento/{termoEntrega}', [TermoEntregaController::class, 'verificarProcessamento'])
+        ->name('termo.verificar_processamento');
 
     Route::get('/TermoDeEntrega/{termoEntrega}/edit', [TermoEntregaController::class, 'edit'])->name('termo.edit');
     Route::get('TermoDeEntrega/show/{termoEntrega}', [TermoEntregaController::class, 'show'])->name('termo.show');
