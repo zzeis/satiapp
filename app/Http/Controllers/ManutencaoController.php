@@ -98,7 +98,7 @@ class ManutencaoController extends Controller
         ]);
 
         // Envia e-mail para a empresa terceirizada
-        Mail::to('posygame@gmail.com')->queue(
+        Mail::to('suporte@lemti.com.br')->queue(
             (new SolicitacaoManutencao($manutencao))->onQueue('redis')
         );
         return redirect()->route('manutencao.index')->with('success', 'Chamado aberto com sucesso!');
