@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProcessarPdfTermo;
 use App\Models\Equipamento;
 use App\Models\Movimentacoes;
 use App\Models\Pessoa;
@@ -71,7 +72,6 @@ class TermoEntregaController extends Controller
             'nome' => 'required|string|max:255',
             'secretaria_id' => 'required|exists:secretarias,id',
             'observacoes' => 'nullable|string',
-            'arquivo_path' => 'nullable|string',
         ]);
 
         // Iniciar transação
@@ -87,28 +87,15 @@ class TermoEntregaController extends Controller
                 ]
             );
 
-            // Obter os equipamentos selecionados
-            $equipamentos = Equipamento::whereIn('id', $request->equipamento_id)->get();
-
-            // Gerar o PDF
-            $pdf = $this->gerarPdfTermo($pessoa, $equipamentos);
-
-            // Definir o nome do arquivo
-            $nomeArquivo = 'termo_' . Str::slug($pessoa->nome) . '_' . date('dmY_His') . '.pdf';
-            $caminho = 'termos/' . $nomeArquivo;
-
-            // Salvar o PDF em storage
-            Storage::put('public/' . $caminho, $pdf->output());
-            $arquivo_path = 'storage/' . $caminho;
-
-            // Criar o Termo de Entrega
+            // Criar o Termo de Entrega (sem arquivo_path inicialmente)
             $termoEntrega = TermoEntrega::create([
                 'responsavel_id' => $pessoa->id,
                 'user_id' => auth()->id(), // Usuário logado
                 'secretaria_id' => $request->secretaria_id,
-                'arquivo_path' => $arquivo_path,
                 'observacoes' => $request->observacoes,
-                'data_entrega' => Date::now()
+                'data_entrega' => now(),
+                'arquivo_path' => 'processando',
+                'processado' => false // Novo campo para controlar se o PDF foi processado
             ]);
 
             // Agrupar equipamentos por tipo para calcular quantidade
@@ -154,11 +141,14 @@ class TermoEntregaController extends Controller
                 }
             }
 
+            // Disparar o job para processar o PDF em segundo plano
+            ProcessarPdfTermo::dispatch($termoEntrega->id)->onQueue('redis');
+
             DB::commit();
 
             // Redirecionar para a view de exibição do termo criado
             return redirect()->route('termo.show', $termoEntrega->id)
-                ->with('success', 'Termo de Entrega criado com sucesso!');
+                ->with('success', 'Termo de Entrega criado com sucesso! O PDF está sendo gerado e estará disponível em breve.');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()
@@ -168,32 +158,17 @@ class TermoEntregaController extends Controller
     }
 
     /**
-     * Gera o PDF do Termo de Responsabilidade
+     * Verifica o status de processamento do PDF e atualiza se necessário
      * 
-     * @param Pessoa $pessoa
-     * @param Collection $equipamentos
-     * @return \Barryvdh\DomPDF\PDF
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
      */
-    private function gerarPdfTermo(Pessoa $pessoa, $equipamentos)
+    public function verificarProcessamento(TermoEntrega $termoEntrega)
     {
-        // Você precisará ter o pacote barryvdh/laravel-dompdf instalado
-        // composer require barryvdh/laravel-dompdf
-
-        $logoPath = public_path('images/brasao.png');
-        $logoBase64 = '';
-
-        if (file_exists($logoPath)) {
-            $logoBase64 = base64_encode(file_get_contents($logoPath));
-        }
-
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('TermoEntrega.pdf', [
-            'pessoa' => $pessoa,
-            'equipamentos' => $equipamentos,
-            'data' => now()->format('d/m/Y'),
-            'logoBase64' => $logoBase64
+        return response()->json([
+            'processado' => $termoEntrega->processado,
+            'arquivo_path' => asset($termoEntrega->arquivo_path),
         ]);
-
-        return $pdf;
     }
 
     /**
