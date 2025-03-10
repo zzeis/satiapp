@@ -57,6 +57,7 @@
             <h3>Solicitação de Manutenção</h1>
         </div>
         <div class="content">
+            <p>Prefeitura de Iguape,</p>
             <p>Por favor, solicitamos a manutenção para o seguinte equipamento:</p>
             <ul>
                 <li><strong>Tipo:</strong> {{ $manutencao->equipamento->tipo->nome }}</li>
