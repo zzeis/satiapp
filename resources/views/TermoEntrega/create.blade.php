@@ -78,7 +78,15 @@
                         <div class="mt-4">
                             <button type="button"
                                 class="remove-equipment-btn bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-trash-2">
+                                    <path d="M3 6h18" />
+                                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                                    <line x1="10" x2="10" y1="11" y2="17" />
+                                    <line x1="14" x2="14" y1="11" y2="17" />
+                                </svg>
                             </button>
                         </div>
                     </div>
@@ -88,16 +96,28 @@
                 <div class="mb-6">
                     <button type="button" id="add-equipment-btn"
                         class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-package-plus"><path d="M16 16h6"/><path d="M19 13v6"/><path d="M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l2-1.14"/><path d="m7.5 4.27 9 5.15"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" x2="12" y1="22" y2="12"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" class="lucide lucide-package-plus">
+                            <path d="M16 16h6" />
+                            <path d="M19 13v6" />
+                            <path
+                                d="M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l2-1.14" />
+                            <path d="m7.5 4.27 9 5.15" />
+                            <polyline points="3.29 7 12 12 20.71 7" />
+                            <line x1="12" x2="12" y1="22" y2="12" />
+                        </svg>
                     </button>
                 </div>
 
                 <!-- Botões de Ação -->
-                <div class="flex space-x-4">
-                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
-                        Salvar Termo
+                <div class="flex space-x-4 justify-end">
+                    <button type="submit" class="flex  items-center align-right bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                        <i data-lucide="save" class="w-5 h-5 mr-2"></i>
+
+                        Finalizar
                     </button>
-                  
+
                 </div>
             </form>
         </div>
