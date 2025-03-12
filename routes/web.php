@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EquipamentoController;
 use App\Http\Controllers\ManutencaoController;
+use App\Http\Controllers\PessoaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TermoEntregaController;
 use Illuminate\Support\Facades\Route;
@@ -45,6 +46,14 @@ Route::get('/preview-email', function () {
         'message' => $message,
     ]);
 });
+
+
+// rotas pessoa
+Route::middleware(['auth', 'verified'])->group(function () {
+
+    Route::post('/pessoa/buscar-por-nome', [PessoaController::class, 'buscarPorNome'])->name('pessoa.buscar-por-nome');
+});
+
 
 //rotas Termo de entrega
 Route::middleware(['auth', 'verified'])->group(function () {
