@@ -91,7 +91,7 @@ class EquipamentoController extends Controller
         Equipamento::create($request->all());
 
         return redirect()
-            ->route('equipamentos.index')
+            ->route('equipamentos.create')
             ->with('success', 'Equipamento cadastrado com sucesso!');
     }
 
