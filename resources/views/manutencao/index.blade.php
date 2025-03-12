@@ -206,7 +206,7 @@
                         <label for="action" class="block text-sm font-medium text-gray-700">Ação</label>
                         <select name="action" id="action"
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                            <option value="concerto">Concerto</option>
+                            <option value="concerto">Concluido</option>
                             <option value="troca">Troca</option>
                         </select>
                     </div>
@@ -237,12 +237,7 @@
                         <textarea name="observacoes" id="observacoes"
                             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"></textarea>
                     </div>
-                    <div class="mb-4">
-                        <label for="desativar_equipamento" class="block text-sm font-medium text-gray-700">Desativar
-                            Equipamento</label>
-                        <input type="checkbox" name="desativar_equipamento" id="desativar_equipamento"
-                            class="mt-1 block">
-                    </div>
+                    
                     <!-- Campo oculto para enviar o status -->
                     <input type="hidden" name="status" id="status_" value="">
                     <div class="flex justify-end">
