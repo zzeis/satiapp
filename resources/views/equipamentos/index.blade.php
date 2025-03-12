@@ -64,10 +64,7 @@
                         <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
                             Filtrar
                         </button>
-                        <a href="{{ route('equipamentos.index') }}"
-                            class="ml-2 bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
-                            Limpar
-                        </a>
+                      
                     </div>
                 </div>
             </form>
