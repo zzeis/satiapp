@@ -58,12 +58,11 @@ class ManutencaoController extends Controller
 
         $tiposEquipamentos = TipoEquipamento::all();
         $secretarias = Secretaria::all();
-    
+
         return view('manutencao.create', compact('tiposEquipamentos', 'secretarias'));
-        
     }
 
-    
+
 
     public function store(Request $request)
     {
@@ -78,7 +77,7 @@ class ManutencaoController extends Controller
         $equipamento = Equipamento::where('numero_serie', $request->numero_serie)->first();
         // Registra a movimentação de conclusão
         Movimentacoes::create([
-    
+
             'equipamento_id' => $equipamento->id,
             'data' => Date::now(),
             'acao' => 'abertura_manutencao',
@@ -107,10 +106,6 @@ class ManutencaoController extends Controller
     // Método para concluir a manutenção
     public function concluir(Manutencao $manutencao, Request $request)
     {
-        // Validação
-        if ($manutencao->status !== 'em_andamento') {
-            return redirect()->back()->with('error', 'A manutenção não está em andamento.');
-        }
 
         // Atualiza o status e registra a conclusão
         $manutencao->status = 'concluido';
