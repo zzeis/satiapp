@@ -14,6 +14,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Log;
 
 class ProcessarPdfTermo implements ShouldQueue
 {
@@ -21,6 +22,10 @@ class ProcessarPdfTermo implements ShouldQueue
 
     protected $termoId;
 
+ 
+    public $timeout = 300; // 5 minutos
+    public $tries = 3; // Número máximo de tentativas
+    public $backoff = [30, 60, 120]; 
     /**
      * Create a new job instance.
      *
@@ -39,7 +44,11 @@ class ProcessarPdfTermo implements ShouldQueue
      */
     public function handle()
     {
+
+        ini_set('memory_limit', '512M');
         // Buscar o termo de entrega
+
+        Log::info('Iniciando geração de PDF para termo: ' . $this->termoId);
         $termoEntrega = TermoEntrega::findOrFail($this->termoId);
         $pessoa = Pessoa::findOrFail($termoEntrega->responsavel_id);
         
