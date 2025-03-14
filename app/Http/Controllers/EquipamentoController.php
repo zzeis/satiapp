@@ -233,6 +233,7 @@ class EquipamentoController extends Controller
             $query->where('numero_serie', 'like', '%' . $request->numero_serie . '%');
         }
 
+
         if ($request->tipo_id) {
             $query->where('tipo_id', $request->tipo_id);
         }
@@ -245,7 +246,7 @@ class EquipamentoController extends Controller
             $query->where('secretaria_id', $request->secretaria_id);
         }
 
-        $equipamentos = $query->paginate(10, ['id', 'numero_serie', 'modelo']);
+        $equipamentos = $query->with('tipo')->paginate(10, ['id', 'numero_serie', 'modelo','tipo_id','status']);
 
         return response()->json($equipamentos);
     }
