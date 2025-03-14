@@ -2,11 +2,11 @@
 
 @section('content')
     <div class="container mx-auto px-4 py-8">
-        <div class="bg-white rounded-xl shadow-lg p-8 border border-gray-100">
-            <h1 class="text-2xl font-bold mb-6 text-gray-800 flex items-center">
+        <div class="bg-white dark:bg-gray-800 dark:border-gray-700 rounded-xl shadow-lg p-8 border border-gray-100">
+            <h1 class="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-200 flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="lucide lucide-file-text mr-2 text-blue-500">
+                    class="lucide lucide-file-text mr-2 text-blue-500 dark:text-blue-400">
                     <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
                     <polyline points="14 2 14 8 20 8" />
                     <line x1="16" x2="8" y1="13" y2="13" />
@@ -20,8 +20,9 @@
                 @csrf
 
                 <!-- Dados do Funcionário -->
-                <div class="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl shadow-sm border border-blue-100">
-                    <h2 class="text-lg font-semibold mb-4 text-blue-800 flex items-center">
+                <div
+                    class="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/50 dark:to-indigo-900/50 rounded-xl shadow-sm border border-blue-100 dark:border-blue-800">
+                    <h2 class="text-lg font-semibold mb-4 text-blue-800 dark:text-blue-200 flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                             stroke-linejoin="round" class="lucide lucide-user mr-2">
@@ -34,11 +35,12 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="group">
                             <label for="employee_name"
-                                class="block text-sm font-medium text-gray-700 mb-1 group-hover:text-blue-600 transition-colors duration-200">Nome
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200">
+                                Nome
                                 do Funcionário</label>
                             <div class="relative">
                                 <input type="text" id="nome" name="nome"
-                                    class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-200"
+                                    class="block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-200 dark:bg-gray-700 dark:text-gray-200"
                                     required>
                                 <div
                                     class="absolute inset-0 rounded-lg shadow-inner pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -48,10 +50,10 @@
 
                         <div class="group">
                             <label for="cpf"
-                                class="block text-sm font-medium text-gray-700 mb-1 group-hover:text-blue-600 transition-colors duration-200">CPF</label>
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200">CPF</label>
                             <div class="relative">
                                 <input type="text" id="cpf" name="cpf"
-                                    class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-200"
+                                    class="block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-200 dark:bg-gray-700 dark:text-gray-200"
                                     required>
                                 <div
                                     class="absolute inset-0 rounded-lg shadow-inner pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -62,8 +64,8 @@
                 </div>
 
                 <!-- Departamento -->
-                <div class="p-6 bg-gradient-to-r from-blue-50 to-violet-50 rounded-xl shadow-sm border border-purple-100">
-                    <h2 class="text-lg font-semibold mb-4 text-purple-800 flex items-center">
+                <div class="p-6 bg-gradient-to-r from-blue-50 to-violet-50 dark:from-blue-900/50 dark:to-violet-900/50 rounded-xl shadow-sm border border-purple-100 dark:border-purple-800">
+                    <h2 class="text-lg font-semibold mb-4 text-purple-800 dark:text-purple-200 flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                             stroke-linejoin="round" class="lucide lucide-building-2 mr-2">
@@ -80,31 +82,24 @@
 
                     <div class="group">
                         <label for="secretaria_id"
-                            class="block text-sm font-medium text-gray-700 mb-1 group-hover:text-purple-600 transition-colors duration-200">Secretaria</label>
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors duration-200">Secretaria</label>
                         <div class="relative">
                             <select name="secretaria_id" id="secretaria_id"
-                                class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 appearance-none transition-all duration-200"
+                                class="block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 appearance-none transition-all duration-200 dark:bg-gray-700 dark:text-gray-200"
                                 required>
                                 <option value="">Selecione uma secretaria</option>
                                 @foreach ($secretarias as $secretaria)
                                     <option value="{{ $secretaria->id }}">{{ $secretaria->nome }}</option>
                                 @endforeach
                             </select>
-                            <div
-                                class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="lucide lucide-chevron-down">
-                                    <path d="m6 9 6 6 6-6" />
-                                </svg>
-                            </div>
+                           
                         </div>
                     </div>
                 </div>
 
                 <!-- Equipamentos -->
-                <div class="p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl shadow-sm border border-green-100">
-                    <h2 class="text-lg font-semibold mb-4 text-green-800 flex items-center">
+                <div class="p-6 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/50 dark:to-emerald-900/50 rounded-xl shadow-sm border border-green-100 dark:border-green-800">
+                    <h2 class="text-lg font-semibold mb-4 text-green-800 dark:text-green-200 flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                             stroke-linejoin="round" class="lucide lucide-laptop mr-2">
@@ -116,15 +111,15 @@
 
                     <div id="equipment-container" class="space-y-6">
                         <div
-                            class="equipment-row p-5 border border-green-200 rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow duration-300">
+                            class="equipment-row p-5 border border-green-200 dark:border-green-700 rounded-lg bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow duration-300">
                             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                                 <!-- Número de Série -->
                                 <div class="group">
                                     <label
-                                        class="block text-sm font-medium text-gray-700 mb-1 group-hover:text-green-600 transition-colors duration-200">Número
+                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors duration-200">Número
                                         de Série</label>
                                     <input type="text" name=""
-                                        class="serial-number block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition-all duration-200"
+                                        class="serial-number block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition-all duration-200 dark:bg-gray-700 dark:text-gray-200"
                                         placeholder="Digite o número de série">
                                 </div>
 
@@ -133,19 +128,19 @@
                                 <!-- Tipo de Equipamento -->
                                 <div class="group">
                                     <label
-                                        class="block text-sm font-medium text-gray-700 mb-1 group-hover:text-green-600 transition-colors duration-200">Tipo
+                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors duration-200">Tipo
                                         de Equipamento</label>
                                     <input type="text"
-                                        class="equipment-type block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition-all duration-200"
+                                        class="equipment-type block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition-all duration-200 dark:text-gray-200"
                                         name="tipo_id[]" readonly>
                                 </div>
 
                                 <!-- Modelo -->
                                 <div class="group">
                                     <label
-                                        class="block text-sm font-medium text-gray-700 mb-1 group-hover:text-green-600 transition-colors duration-200">Modelo</label>
+                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors duration-200">Modelo</label>
                                     <input type="text"
-                                        class="equipment-model block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition-all duration-200"
+                                        class="equipment-model block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition-all duration-200 dark:text-gray-200"
                                         name="modelo[]" readonly>
                                 </div>
                             </div>
@@ -194,7 +189,7 @@
                 <!-- Botões de Ação -->
                 <div class="flex justify-between items-center pt-4">
                     <a href="{{ route('termo.index') }}"
-                        class="flex items-center text-gray-600 hover:text-gray-800 transition-colors duration-200">
+                        class="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors duration-200">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                             stroke-linejoin="round" class="lucide lucide-arrow-left mr-2">
@@ -232,12 +227,12 @@
                 equipmentCounter++;
 
                 const newRow = `
-                    <div class="equipment-row p-5 border border-green-200 rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow duration-300 transform translate-y-4 opacity-0" style="animation: fadeSlideIn 0.3s ease-out forwards;">
+                    <div class="equipment-row p-5 border border-green-200 dark:border-green-700 rounded-lg bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow duration-300 transform translate-y-4 opacity-0" style="animation: fadeSlideIn 0.3s ease-out forwards;">
                         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                             <!-- Número de Série -->
                             <div class="group">
-                                <label class="block text-sm font-medium text-gray-700 mb-1 group-hover:text-green-600 transition-colors duration-200">Número de Série</label>
-                                <input type="text" class="serial-number block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition-all duration-200"
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors duration-200">Número de Série</label>
+                                <input type="text" class="serial-number block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition-all duration-200 dark:bg-gray-700 dark:text-gray-200"
                                     placeholder="Digite o número de série">
                             </div>
 
@@ -246,15 +241,15 @@
                             
                             <!-- Tipo de Equipamento -->
                             <div class="group">
-                                <label class="block text-sm font-medium text-gray-700 mb-1 group-hover:text-green-600 transition-colors duration-200">Tipo de Equipamento</label>
-                                <input type="text" class="equipment-type block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition-all duration-200"
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors duration-200">Tipo de Equipamento</label>
+                                <input type="text" class="equipment-type block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition-all duration-200 dark:text-gray-200"
                                     name="tipo_id[]" readonly>
                             </div>
 
                             <!-- Modelo -->
                             <div class="group">
-                                <label class="block text-sm font-medium text-gray-700 mb-1 group-hover:text-green-600 transition-colors duration-200">Modelo</label>
-                                <input type="text" class="equipment-model block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm bg-gray-50 focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition-all duration-200"
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors duration-200">Modelo</label>
+                                <input type="text" class="equipment-model block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition-all duration-200 dark:text-gray-200"
                                     name="equipment_model[]" readonly>
                             </div>
                         </div>
@@ -297,10 +292,10 @@
                 };
 
                 const colors = {
-                    success: 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-500/30 text-green-800',
-                    error: 'bg-gradient-to-r from-red-50 to-rose-50 border-red-500/30 text-red-800',
-                    warning: 'bg-gradient-to-r from-amber-50 to-yellow-50 border-amber-500/30 text-amber-800',
-                    info: 'bg-gradient-to-r from-blue-50 to-cyan-50 border-blue-500/30 text-blue-800'
+                    success: 'bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border-green-500/30 dark:border-green-500/50 text-green-800 dark:text-green-200',
+                    error: 'bg-gradient-to-r from-red-50 to-rose-50 dark:from-red-900/30 dark:to-rose-900/30 border-red-500/30 dark:border-red-500/50 text-red-800 dark:text-red-200',
+                    warning: 'bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/30 dark:to-yellow-900/30 border-amber-500/30 dark:border-amber-500/50 text-amber-800 dark:text-amber-200',
+                    info: 'bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/30 dark:to-cyan-900/30 border-blue-500/30 dark:border-blue-500/50 text-blue-800 dark:text-blue-200'
                 };
 
                 const alertId = 'alert-' + Date.now();
@@ -313,7 +308,7 @@
                         <div class="flex-1">
                             <p class="font-semibold">${message}</p>
                         </div>
-                        <button type="button" class="ml-auto flex-shrink-0 rounded-full p-1.5 hover:bg-black/5 active:bg-black/10 transition-colors duration-200" onclick="dismissAlert('${alertId}')">
+                        <button type="button" class="ml-auto flex-shrink-0 rounded-full p-1.5 hover:bg-black/5 dark:hover:bg-white/10 active:bg-black/10 dark:active:bg-white/20 transition-colors duration-200" onclick="dismissAlert('${alertId}')">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
                         </button>
                     </div>
@@ -387,7 +382,7 @@
                                         'error');
                                 }
                                 row.find('.serial-number').val(
-                                ''); // Limpa o campo de número de série
+                                    ''); // Limpa o campo de número de série
 
                                 // Flash error highlight
                                 row.addClass('ring-2 ring-red-500/30');
