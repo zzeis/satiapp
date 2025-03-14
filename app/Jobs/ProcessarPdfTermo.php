@@ -22,6 +22,10 @@ class ProcessarPdfTermo implements ShouldQueue
 
     protected $termoId;
 
+ 
+    public $timeout = 300; // 5 minutos
+    public $tries = 3; // Número máximo de tentativas
+    public $backoff = [30, 60, 120]; 
     /**
      * Create a new job instance.
      *
@@ -40,10 +44,30 @@ class ProcessarPdfTermo implements ShouldQueue
      */
     public function handle()
     {
+<<<<<<< HEAD
         try {
             // Buscar o termo de entrega
             $termoEntrega = TermoEntrega::findOrFail($this->termoId);
             $pessoa = Pessoa::findOrFail($termoEntrega->responsavel_id);
+=======
+
+        ini_set('memory_limit', '512M');
+        // Buscar o termo de entrega
+
+        Log::info('Iniciando geração de PDF para termo: ' . $this->termoId);
+        $termoEntrega = TermoEntrega::findOrFail($this->termoId);
+        $pessoa = Pessoa::findOrFail($termoEntrega->responsavel_id);
+        
+        // Buscar os equipamentos associados ao termo
+        $equipamentosIds = TermoEquipamento::where('termo_id', $this->termoId)
+            ->pluck('equipamento_id')
+            ->toArray();
+        
+        $equipamentos = Equipamento::whereIn('id', $equipamentosIds)->get();
+        
+        // Gerar o PDF
+        $pdf = $this->gerarPdfTermo($pessoa, $equipamentos);
+>>>>>>> main
 
             // Buscar os equipamentos associados ao termo
             $equipamentosIds = TermoEquipamento::where('termo_id', $this->termoId)
