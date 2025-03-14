@@ -11,4 +11,13 @@ class TipoEquipamento extends Model
     
     protected $table = 'tipos_equipamentos';
     protected $fillable = ['nome'];
+
+
+    // Relacionamento com Equipamento
+    public function equipamentos()
+    {
+        return $this->hasMany(Equipamento::class, 'tipo_id');
+    }
+    
 }
+
