@@ -3,7 +3,7 @@
 @section('title', 'Equipamentos')
 
 @section('content')
-    <div class="container mx-auto px-4 py-8">
+    <div class="container mx-auto px-4 py-8 ">
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
             <!-- Header with Title and Action Button -->
             <div class="flex flex-col md:flex-row justify-between items-center p-6 border-b border-gray-100 dark:border-gray-700">
