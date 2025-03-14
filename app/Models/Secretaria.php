@@ -21,6 +21,13 @@ class Secretaria extends Model
        {
            return $this->hasMany(TermoEntrega::class);
        }
+
+       public function equipamentos()
+       {
+           return $this->hasMany(Equipamento::class);
+       }
+       
+
 }
 
 
