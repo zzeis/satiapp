@@ -44,12 +44,6 @@ class ProcessarPdfTermo implements ShouldQueue
      */
     public function handle()
     {
-<<<<<<< HEAD
-        try {
-            // Buscar o termo de entrega
-            $termoEntrega = TermoEntrega::findOrFail($this->termoId);
-            $pessoa = Pessoa::findOrFail($termoEntrega->responsavel_id);
-=======
 
         ini_set('memory_limit', '512M');
         // Buscar o termo de entrega
@@ -67,7 +61,6 @@ class ProcessarPdfTermo implements ShouldQueue
         
         // Gerar o PDF
         $pdf = $this->gerarPdfTermo($pessoa, $equipamentos);
->>>>>>> main
 
             // Buscar os equipamentos associados ao termo
             $equipamentosIds = TermoEquipamento::where('termo_id', $this->termoId)
@@ -99,14 +92,7 @@ class ProcessarPdfTermo implements ShouldQueue
                 'resultado_update' => $resultado,
                 'processado' => $termoEntrega->fresh()->processado
             ]);
-        } catch (\Exception $e) {
-            Log::error("Erro ao processar PDF do termo {$this->termoId}: " . $e->getMessage(), [
-                'exception' => $e
-            ]);
-
-            // Falha no job para que possa ser tentado novamente
-            $this->fail($e);
-        }
+       
     }
 
     /**
