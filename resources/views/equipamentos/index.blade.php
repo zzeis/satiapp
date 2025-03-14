@@ -3,71 +3,17 @@
 @section('title', 'Equipamentos')
 
 @section('content')
-    <div class="container mx-auto px-4 py-6">
-        <!-- Título e Botão de Cadastro -->
-        <div class="flex justify-between  items-center mb-6 flex-wrap">
-            <h1 class="text-2xl font-bold">Equipamentos</h1>
-            <a href="{{ route('equipamentos.create') }}"
-                class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300 flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="lucide lucide-plus mr-2">
-                    <path d="M5 12h14" />
-                    <path d="M12 5v14" />
-                </svg>
-                Novo Equipamento
-            </a>
-        </div>
-        <!-- Filtros e Pesquisa -->
-        <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-            <form action="{{ route('equipamentos.index') }}" method="GET">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <!-- Filtro por Secretaria -->
-                    <div>
-                        <label for="secretaria" class="block text-sm font-medium text-gray-700">Secretaria</label>
-                        <select name="secretaria" id="secretaria"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                            <option value="">Todas</option>
-                            @foreach ($secretarias as $secretaria)
-                                <option value="{{ $secretaria->id }}"
-                                    {{ request('secretaria') == $secretaria->id ? 'selected' : '' }}>
-                                    {{ $secretaria->nome }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <!-- Filtro por Status -->
-                    <div>
-                        <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
-                        <select name="status" id="status"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                            <option value="">Todos</option>
-                            <option value="estoque" {{ request('status') === 'estoque' ? 'selected' : '' }}>Estoque
-                            </option>
-                            <option value="em_uso" {{ request('status') === 'em_uso' ? 'selected' : '' }}>Em uso</option>
-                            <option value="manutencao" {{ request('status') === 'manutencao' ? 'selected' : '' }}>Em
-                                manutenção</option>
-                        </select>
-                    </div>
-
-                    <!-- Campo de Pesquisa -->
-                    <div>
-                        <label for="search" class="block text-sm font-medium text-gray-700">Pesquisar</label>
-                        <input type="text" name="search" id="search"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                            placeholder="Número de série, Modelo" value="{{ request('search') }}">
-                    </div>
-
-                    <!-- Botão de Pesquisa -->
-
-                    <div class="flex items-end align-center">
-                        <button type="submit"
-                            class=" bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 min-w-[80px] text-center text-sm">
-                            Filtrar
-                        </button>
-                      
-                    </div>
+    <div class="container mx-auto px-4 py-8 uh ">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+            <!-- Header with Title and Action Button -->
+            <div class="flex flex-col md:flex-row justify-between items-center p-6 border-b border-gray-100 dark:border-gray-700">
+                <div class="flex items-center space-x-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="text-blue-500 dark:text-blue-400">
+                        <path d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45L4 16" />
+                    </svg>
+                    <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-200">Equipamentos</h1>
                 </div>
                 <a href="{{ route('equipamentos.create') }}"
                     class="mt-4 md:mt-0 inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform hover:translate-y-[-1px] active:translate-y-0">
