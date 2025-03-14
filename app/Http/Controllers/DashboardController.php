@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Equipamento;
+use App\Models\Manutencao;
+use App\Models\Movimentacoes;
+use App\Models\Secretaria;
+use App\Models\TipoEquipamento;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -9,17 +14,51 @@ class DashboardController extends Controller
 {
     public function index()
     {
-         // Aqui você pode adicionar as estatísticas que deseja mostrar
-         $data = [
-            'total_users' => User::count(),
-            'recent_users' => User::latest()->take(5)->get(),
-            // Exemplo de outras estatísticas que você pode adicionar:
-            // 'open_tickets' => Ticket::where('status', 'open')->count(),
-            // 'total_equipment' => Equipment::count(),
-            // 'active_projects' => Project::where('status', 'active')->count(),
+        // Total de equipamentos
+        $totalEquipamentos = Equipamento::count();
+
+        // Equipamentos em estoque
+        $equipamentosEstoque = Equipamento::where('status', 'estoque')->count();
+
+        // Equipamentos em uso
+        $equipamentosEmUso = Equipamento::where('status', 'em_uso')->count();
+
+        // Manutenções abertas
+        $manutencoesAbertas = Manutencao::where('status', 'aberto')->count();
+
+        // Equipamentos por secretaria
+        $secretarias = Secretaria::withCount('equipamentos')->get();
+
+        // Distribuição por tipo de equipamento
+        $distribuicaoPorTipo = TipoEquipamento::withCount('equipamentos')->get();
+
+        // Status dos equipamentos
+        $statusEquipamentos = [
+
+            'em_uso' => Equipamento::where('status', 'em_uso')->count(),
+            'estoque' => Equipamento::where('status', 'estoque')->count(),
         ];
 
-        return view('dashboard.index', $data);
-       
+        // Atividades recentes
+        // Atividades recentes
+        $atividadesRecentes = Movimentacoes::with(['equipamento'])
+            ->latest()
+            ->take(5)
+            ->get();;
+
+        
+
+
+
+        return view('dashboard.index', compact(
+            'totalEquipamentos',
+            'equipamentosEstoque',
+            'equipamentosEmUso',
+            'manutencoesAbertas',
+            'secretarias',
+            'distribuicaoPorTipo',
+            'statusEquipamentos',
+            'atividadesRecentes'
+        ));
     }
 }
