@@ -17,5 +17,7 @@ export default {
         },
     },
 
+    darkMode: 'class', // Habilita o modo escuro baseado em classes
+
     plugins: [forms, require("@tailwindcss/forms")],
 };
