@@ -132,9 +132,7 @@
                             <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 Nome da Pessoa
                             </th>
-                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                CPF
-                            </th>
+                            
                             <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 Secretaria
                             </th>
@@ -158,9 +156,7 @@
                                         {{ $termo->responsavel->nome }}
                                     </a>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
-                                    {{ $termo->responsavel->cpf }}
-                                </td>
+                               
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
                                     {{ $termo->secretaria->nome }}
                                 </td>
