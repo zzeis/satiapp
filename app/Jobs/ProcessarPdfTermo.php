@@ -45,7 +45,7 @@ class ProcessarPdfTermo implements ShouldQueue
     public function handle()
     {
 
-        ini_set('memory_limit', '512M');
+        ini_set('memory_limit', '768M'); 
         // Buscar o termo de entrega
 
         Log::info('Iniciando geração de PDF para termo: ' . $this->termoId);
