@@ -257,11 +257,5 @@ class TermoEntregaController extends Controller
         return view('TermoEntrega.show', compact('termoEntrega'));
     }
 
-    public function previewPDF()
-    {
-
-
-
-        return view('TermoEntrega.pdf2');
-    }
+    
 }
