@@ -51,7 +51,7 @@ class ProcessarPdfTermo implements ShouldQueue
         $pessoa = Pessoa::findOrFail($termoEntrega->responsavel_id);
         // Buscar os equipamentos associados ao termo
         $equipamentosIds = TermoEquipamento::where('termo_id', $this->termoId)
-            ->pluck('equipamentoid')
+            ->pluck('equipamento_id')
             ->toArray();
         $equipamentos = Equipamento::whereIn('id', $equipamentosIds)->get();
         // Gerar o PDF
