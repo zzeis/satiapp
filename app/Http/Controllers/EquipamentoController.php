@@ -72,6 +72,7 @@ class EquipamentoController extends Controller
             'responsavel_id' => 'nullable|exists:pessoas,id',
             'status' => 'required|in:manutencao,em_uso,estoque,descartado',
             'tipo_id' => 'required|string|max:255',
+            'tipo_propriedade' => 'required|string|max:255',
             'numero_serie' => ['required', 'string', Rule::unique('equipamentos')->whereNull('deleted_at')],
             'modelo' => 'required|string|max:255',
             'especificacoes' => 'nullable|string',
@@ -238,6 +239,10 @@ class EquipamentoController extends Controller
             $query->where('tipo_id', $request->tipo_id);
         }
 
+        if ($request->tipo_propriedade) {
+            $query->where('tipo_propriedade', $request->tipo_propriedade);
+        }
+
         if ($request->status) {
             $query->where('status', $request->status);
         }
@@ -246,7 +251,7 @@ class EquipamentoController extends Controller
             $query->where('secretaria_id', $request->secretaria_id);
         }
 
-        $equipamentos = $query->with('tipo')->paginate(10, ['id', 'numero_serie', 'modelo','tipo_id','status']);
+        $equipamentos = $query->with('tipo')->paginate(10, ['id', 'numero_serie', 'modelo', 'tipo_id', 'status','tipo_propriedade']);
 
         return response()->json($equipamentos);
     }
