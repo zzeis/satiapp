@@ -96,10 +96,15 @@ class ManutencaoController extends Controller
             'observacoes' => $request->observacoes,
         ]);
 
-        // Envia e-mail para a empresa terceirizada
-        Mail::to('posygame@gmail.com')->queue(
-            (new SolicitacaoManutencao($manutencao))->onQueue('redis')
-        );
+        if ($equipamento->tipo_propriedade == 'alugado') {
+            // Envia e-mail para a empresa terceirizada
+
+           
+            Mail::to('posygame@gmail.com')->queue(
+                (new SolicitacaoManutencao($manutencao))->onQueue('redis')
+            );
+        }
+
         return redirect()->route('manutencao.index')->with('success', 'Chamado aberto com sucesso!');
     }
 
