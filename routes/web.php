@@ -62,12 +62,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('TermoDeEntrega/store', [TermoEntregaController::class, 'store'])->name('termo.store');
     Route::post('/TermoDeEntrega/{termoEntrega}/devolucao', [TermoEntregaController::class, 'devolucao'])->name('termo.devolucao');
 
+    Route::get('TermoDeEntrega/{termoEntrega}/edit', [TermoEntregaController::class, 'edit'])->name('termo.edit');
+    Route::put('TermoDeEntrega/{termoEntrega}', [TermoEntregaController::class, 'update'])->name('termo.update');
 
-    // No arquivo routes/web.php
     Route::get('TermoDeEntrega/verificar-processamento/{termoEntrega}', [TermoEntregaController::class, 'verificarProcessamento'])
         ->name('termo.verificar_processamento');
 
-    Route::get('/TermoDeEntrega/{termoEntrega}/edit', [TermoEntregaController::class, 'edit'])->name('termo.edit');
     Route::get('TermoDeEntrega/show/{termoEntrega}', [TermoEntregaController::class, 'show'])->name('termo.show');
 
     Route::get('/TermoDeEntrega/previewpdf', [TermoEntregaController::class, 'previewPDF'])->name('termo.previewpdf');
@@ -109,6 +109,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('equipamentos/edit/{equipamento}', [EquipamentoController::class, 'edit'])->name('equipamentos.edit');
     Route::get('equipamentos/detalhes/{equipamento}', [EquipamentoController::class, 'detalhes'])->name('equipamentos.detalhes');
 
+
+    Route::get('/equipamentos/search', [TermoEntregaController::class, 'searchEquipment'])->name('equipamentos.search');
     Route::delete('equipamentos/delete/{equipamento}', [EquipamentoController::class, 'destroy'])->name('equipamentos.destroy');
 
     Route::get('equipamentos-trashed', [EquipamentoController::class, 'trashed'])->name('equipamentos.trashed');
