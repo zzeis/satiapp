@@ -110,14 +110,26 @@
                                         <option value="{{ $tipo->id }}">{{ $tipo->nome }}</option>
                                     @endforeach
                                 </select>
-                                <div
-                                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700 dark:text-gray-300">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="m6 9 6 6 6-6" />
-                                    </svg>
-                                </div>
+                             
+                            </div>
+                        </div>
+                        <!-- Tipo de Propriedade -->
+                        <div class="group">
+                            <label for="tipo_equipamento_id"
+                                class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200">
+                            
+                                 Propriedade
+                            </label>
+                            <div class="relative">
+                                <select name="tipo_propriedade" id="tipo_propriedade"
+                                    class="block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-200 dark:bg-gray-700 dark:text-gray-200 appearance-none"
+                                    required>
+                                    <option value="">Selecione uma propriedade</option>
+                                    <option value="alugado">Alugado</option>
+                                    <option value="municipal">Patrimônio Municipal</option>
+
+                                </select>
+                              
                             </div>
                         </div>
 

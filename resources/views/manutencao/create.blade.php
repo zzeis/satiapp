@@ -210,6 +210,21 @@
                         
                     </div>
                 </div>
+
+                <div class="group">
+                    <label for="filtro-tipo" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200">
+                        Propriedade
+                    </label>
+                    <div class="relative">
+                        <select id="filtro-tipo-propriedade" 
+                            class="block w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-200 dark:bg-gray-700 dark:text-gray-200 appearance-none">
+                            <option value="">Todos os tipos</option>
+                            <option value="alugado">Alugado</option>
+                            <option value="municipal">Municipal</option>
+                        </select>
+                        
+                    </div>
+                </div>
                 
                 <div class="group">
                     <label for="filtro-status" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200">
@@ -358,10 +373,11 @@
 
             const filtroNumeroSerie = document.getElementById('filtro-numero-serie').value;
             const filtroTipo = document.getElementById('filtro-tipo').value;
+            const filtroTipoPropriedade = document.getElementById('filtro-tipo-propriedade').value;
             const filtroStatus = document.getElementById('filtro-status').value;
             const filtroSecretaria = document.getElementById('filtro-secretaria').value;
 
-            fetch(`/equipamentos/filtrar?numero_serie=${filtroNumeroSerie}&tipo_id=${filtroTipo}&status=${filtroStatus}&secretaria_id=${filtroSecretaria}&page=${paginaAtual}`)
+            fetch(`/equipamentos/filtrar?numero_serie=${filtroNumeroSerie}&tipo_id=${filtroTipo}&tipo_propriedade=${filtroTipoPropriedade}&status=${filtroStatus}&secretaria_id=${filtroSecretaria}&page=${paginaAtual}`)
                 .then(response => response.json())
                 .then(data => {
                     // Remover indicador de carregamento
@@ -398,11 +414,11 @@
                             switch(equipamento.status) {
                                 case 'estoque':
                                     statusIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M20 9v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9"/><path d="M9 2h6a2 2 0 0 1 2 2v5H7V4a2 2 0 0 1 2-2z"/></svg>';
-                                    statusClass = 'text-blue-600 dark:text-blue-400';
+                                    statusClass = 'text-green-600 dark:text-green-400';
                                     break;
                                 case 'em_uso':
                                     statusIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12  stroke-linejoin="round" class="mr-2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 12"/></svg>';
-                                    statusClass = 'text-green-600 dark:text-green-400';
+                                    statusClass = 'text-purple-600 dark:text-purple-400';
                                     break;
                               
                             }
@@ -446,6 +462,7 @@
 
         function selecionarEquipamento(equipamento) {
             document.getElementById('numero_serie').value = equipamento.numero_serie;
+
             document.getElementById('campos-dinamicos').classList.remove('hidden');
             fecharModalEquipamentos();
         }
@@ -465,6 +482,12 @@
         });
         
         document.getElementById('filtro-tipo').addEventListener('change', () => {
+            paginaAtual = 1;
+            document.getElementById('lista-equipamentos').innerHTML = '';
+            carregarEquipamentos();
+        });
+
+        document.getElementById('filtro-tipo-propriedade').addEventListener('change', () => {
             paginaAtual = 1;
             document.getElementById('lista-equipamentos').innerHTML = '';
             carregarEquipamentos();
