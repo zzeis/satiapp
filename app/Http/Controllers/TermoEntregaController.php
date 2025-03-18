@@ -56,11 +56,11 @@ class TermoEntregaController extends Controller
     public function create()
     {
 
-        $tipos = TipoEquipamento::all();
+        $tiposEquipamento = TipoEquipamento::all();
 
         $secretarias = Secretaria::all();
 
-        return view('TermoEntrega.create', compact('tipos', 'secretarias'));
+        return view('TermoEntrega.create', compact('tiposEquipamento', 'secretarias'));
     }
 
     public function store(Request $request)
@@ -212,6 +212,9 @@ class TermoEntregaController extends Controller
                 ]);
             }
 
+            // Remover o registro da tabela termo_equipamentos
+            $termoEquipamento->delete();
+
             // Atualizar o termo de entrega
             $termoEntrega->update([
                 'status' => false,
@@ -232,6 +235,204 @@ class TermoEntregaController extends Controller
         }
     }
 
+    /**
+     * Show the form for editing the specified term.
+     *
+     * @param  \App\Models\TermoEntrega  $termoEntrega
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(TermoEntrega $termoEntrega)
+    {
+        // Fetch related data needed for the form
+        $secretarias = Secretaria::all();
+
+        // Get all equipments associated with this term
+        $equipamentosAssociados = $termoEntrega->equipamentos()
+            ->whereNull('termo_equipamentos.deleted_at')
+            ->with('tipo')
+            ->get();
+
+        // Get available equipment types for selection
+        $tiposEquipamento = TipoEquipamento::all();
+
+        return view('TermoEntrega.edit', compact('termoEntrega', 'secretarias', 'equipamentosAssociados', 'tiposEquipamento'));
+    }
+
+    /**
+     * Update the specified term in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\TermoEntrega  $termoEntrega
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, TermoEntrega $termoEntrega)
+    {
+        // Validate the form data
+        $request->validate([
+            'cpf' => 'required|string|max:14',
+            'nome' => 'required|string|max:255',
+            'secretaria_id' => 'required|exists:secretarias,id',
+            'observacoes' => 'nullable|string',
+            'equipamentos_atuais' => 'nullable|array',
+            'equipamentos_novos' => 'nullable|array',
+        ]);
+
+        // Start transaction
+        DB::beginTransaction();
+
+        try {
+            // Update or create the person
+            $pessoa = Pessoa::updateOrCreate(
+                ['cpf' => $request->cpf],
+                [
+                    'nome' => $request->nome,
+                    'secretaria_id' => $request->secretaria_id
+                ]
+            );
+
+            // Update the term
+            $termoEntrega->update([
+                'responsavel_id' => $pessoa->id,
+                'secretaria_id' => $request->secretaria_id,
+                'observacoes' => $request->observacoes,
+                'arquivo_path' => 'processando', // Will be updated by the job
+                'processado' => false // Mark as not processed to regenerate PDF
+            ]);
+
+            // Handle equipment changes
+
+            // 1. Remove equipment marked for removal
+            if ($request->has('equipamentos_atuais')) {
+                $currentEquipmentIds = TermoEquipamento::where('termo_id', $termoEntrega->id)
+                    ->pluck('equipamento_id')
+                    ->toArray();
+
+                $keptEquipmentIds = array_keys($request->equipamentos_atuais);
+                $equipmentToRemove = array_diff($currentEquipmentIds, $keptEquipmentIds);
+
+                foreach ($equipmentToRemove as $equipamentoId) {
+                    $equipamento = Equipamento::findOrFail($equipamentoId);
+                    $equipamento->update([
+                        'status' => 'estoque',
+                        'responsavel_id' => null
+                    ]);
+
+                    // Remove the term-equipment association
+                    TermoEquipamento::where('termo_id', $termoEntrega->id)
+                        ->where('equipamento_id', $equipamentoId)
+                        ->delete();
+
+                    // Log the equipment removal
+                    Movimentacoes::create([
+                        'equipamento_id' => $equipamento->id,
+                        'descricao' => 'Equipamento removido do termo ' . $termoEntrega->id,
+                        'data' => now(),
+                        'acao' => 'remocao',
+                        'user_id' => auth()->id(),
+                        'termo_id' => $termoEntrega->id
+                    ]);
+                }
+            }
+
+            // 2. Add new equipment
+            if ($request->has('equipamentos_novos')) {
+                $equipamentosPorTipo = [];
+
+                foreach ($request->equipamentos_novos as $equipamentoId) {
+                    if (empty($equipamentoId)) continue;
+
+                    $equipamento = Equipamento::findOrFail($equipamentoId);
+
+                    if (!isset($equipamentosPorTipo[$equipamento->tipo->id])) {
+                        $equipamentosPorTipo[$equipamento->tipo->id] = [
+                            'count' => 0,
+                            'ids' => []
+                        ];
+                    }
+
+                    $equipamentosPorTipo[$equipamento->tipo->id]['count']++;
+                    $equipamentosPorTipo[$equipamento->tipo->id]['ids'][] = $equipamentoId;
+
+                    // Update equipment status
+                    $equipamento->update([
+                        'responsavel_id' => $pessoa->id,
+                        'status' => 'em_uso',
+                        'secretaria_id' => $pessoa->secretaria_id
+                    ]);
+
+                    // Log the equipment addition
+                    Movimentacoes::create([
+                        'equipamento_id' => $equipamento->id,
+                        'descricao' => 'Equipamento adicionado ao termo para ' . $pessoa->nome,
+                        'data' => now(),
+                        'acao' => 'adicao',
+                        'user_id' => auth()->id(),
+                        'termo_id' => $termoEntrega->id
+                    ]);
+
+                    // Create records in TermoEquipamento for new equipment
+                    TermoEquipamento::create([
+                        'termo_id' => $termoEntrega->id,
+                        'equipamento_id' => $equipamentoId,
+                        'quantidade' => 1 // Individual equipment
+                    ]);
+                }
+            }
+
+            // Dispatch job to process PDF in background
+            ProcessarPdfTermo::dispatch($termoEntrega->id)->onQueue('redis');
+
+            DB::commit();
+
+            // Redirect to the term view
+            return redirect()->route('termo.show', $termoEntrega->id)
+                ->with('success', 'Termo de Entrega atualizado com sucesso! O PDF está sendo regenerado e estará disponível em breve.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()
+                ->with('error', 'Erro ao atualizar Termo de Entrega: ' . $e->getMessage())
+                ->withInput();
+        }
+    }
+
+    /**
+     * Search for equipment by different criteria
+     * 
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function searchEquipment(Request $request)
+    {
+        $query = Equipamento::query();
+
+        // Filter by type if provided
+        if ($request->has('tipo_id') && !empty($request->tipo_id)) {
+            $query->where('tipo_id', $request->tipo_id);
+        }
+
+        // Filter by status (usually 'estoque')
+        $query->where('status', 'estoque');
+
+        // Filter by patrimônio if provided
+        if ($request->has('patrimonio') && !empty($request->patrimonio)) {
+            $query->where('patrimonio', 'like', '%' . $request->patrimonio . '%');
+        }
+
+        // Filter by marca/modelo if provided
+        if ($request->has('marca_modelo') && !empty($request->marca_modelo)) {
+            $search = $request->marca_modelo;
+            $query->where(function ($q) use ($search) {
+                $q->where('marca', 'like', '%' . $search . '%')
+                    ->orWhere('modelo', 'like', '%' . $search . '%');
+            });
+        }
+
+        // Get results with pagination
+        $equipamentos = $query->with('tipo')->paginate(10);
+
+        return response()->json($equipamentos);
+    }
+
     public function show(TermoEntrega $termoEntrega)
     {
         if (!$termoEntrega) {
@@ -246,16 +447,18 @@ class TermoEntregaController extends Controller
             'responsavel',
             'usuario',
             'secretaria',
-            'equipamentos',
-            'usuarioDevolucao'
+            'equipamentos' => function ($query) {
+                $query->whereNull('termo_equipamentos.deleted_at'); // Ignora registros deletados
+            },
+            'usuarioDevolucao',
+
         ])
             ->findOrFail($termoEntrega->id);
 
         // Para debug - descomente se precisar verificar os dados
         // dd($termoEntrega->toArray());
 
+
         return view('TermoEntrega.show', compact('termoEntrega'));
     }
-
-    
 }
