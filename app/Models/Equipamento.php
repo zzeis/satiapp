@@ -28,7 +28,8 @@ class Equipamento extends Model
         'user_id',
         'especificacoes',
         'data_chegada',
-        'data_ultima_manutencao'
+        'data_ultima_manutencao', 
+        'tipo_propriedade'
     ];
 
     protected $casts = [
