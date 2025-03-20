@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\ProcessarTrocaEquipamento;
+use App\Mail\CancelamentoManutencao;
 use App\Models\Manutencao;
 use App\Models\Equipamento;
 use App\Models\Movimentacao;
@@ -112,9 +113,10 @@ class ManutencaoController extends Controller
     public function concluir(Manutencao $manutencao, Request $request)
     {
 
+
         // Atualiza o status e registra a conclusão
         $manutencao->status = 'concluido';
-        $manutencao->observacoes = $request->input('observacoes');
+        $manutencao->observacoes = $request->input('observacoes') . ' - ' . $request->input('status');
         $manutencao->save();
 
         // Registra a movimentação de conclusão
@@ -122,7 +124,7 @@ class ManutencaoController extends Controller
             'manutencao_id' => $manutencao->id,
             'equipamento_id' => $manutencao->equipamento->id,
             'data' => Date::now(),
-            'acao' => 'concluido',
+            'acao' => $request->input('status'),
             'data_conclusao' => Date::now(),
             'descricao' => 'Manutenção concluída.',
         ]);
@@ -381,6 +383,7 @@ class ManutencaoController extends Controller
             'equipamento_id' => $manutencao->equipamento_id,
             'user_id' => auth()->id(),
             'tipo' => 'retirada',
+
             'data' => $request->data,
             'observacoes' => $request->observacoes,
         ]);
@@ -391,6 +394,22 @@ class ManutencaoController extends Controller
 
     public function destroy(Manutencao $manutencao)
     {
+
+        Movimentacoes::create([
+            'manutencao_id' => $manutencao->id,
+            'equipamento_id' => $manutencao->equipamento_id,
+            'user_id' => auth()->id(),
+            'tipo' => 'Cancelamento de manutencao',
+            'acao' => 'Cancelamento',
+            'data' => now(),
+            'observacoes' => 'Cancelamento da manutenção',
+        ]);
+
+        $emailDestino = env('MAIL_DESTINO_CANCELAMENTO');
+        Mail::to($emailDestino)->queue(
+            (new CancelamentoManutencao($manutencao))->onQueue('redis')
+        );
+
         $manutencao->delete();
         return redirect()->route('manutencao.index')->with('success', 'Chamado excluído com sucesso!');
     }
@@ -423,6 +442,7 @@ class ManutencaoController extends Controller
             'tipo_equipamento' => $equipamento->tipo->nome,
             'descricao_defeito' => $manutencao->descricao_problema,
             'secretaria' => $manutencao->secretaria->nome,
+            'tipo_propriedade' => $equipamento->tipo_propriedade
         ]);
     }
     // Função para exibir detalhes da manutenção
