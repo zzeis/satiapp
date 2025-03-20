@@ -13,110 +13,128 @@
             <!-- Metric Cards -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-6">
                 <!-- Total de Equipamentos -->
-                <div
-                    class="bg-white dark:bg-gray-700 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-600">
+                <a href="{{ route('equipamentos.index') }}">
+
                     <div
-                        class="p-4 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 border-b border-blue-100 dark:border-blue-700/50">
-                        <div class="flex items-center justify-between">
-                            <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-200">Total de Equipamentos</h2>
-                            <div class="bg-blue-500 text-white p-2 rounded-lg shadow-md">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="lucide lucide-server">
-                                    <rect width="20" height="8" x="2" y="2" rx="2" ry="2" />
-                                    <rect width="20" height="8" x="2" y="14" rx="2" ry="2" />
-                                    <line x1="6" x2="6" y1="6" y2="6" />
-                                    <line x1="6" x2="6" y1="18" y2="18" />
-                                </svg>
+                        class="bg-white dark:bg-gray-700 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-600">
+                        <div
+                            class="p-4 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 border-b border-blue-100 dark:border-blue-700/50">
+                            <div class="flex items-center justify-between">
+                                <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-200">Total de Equipamentos
+                                </h2>
+                                <div class="bg-blue-500 text-white p-2 rounded-lg shadow-md">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-server">
+                                        <rect width="20" height="8" x="2" y="2" rx="2" ry="2" />
+                                        <rect width="20" height="8" x="2" y="14" rx="2" ry="2" />
+                                        <line x1="6" x2="6" y1="6" y2="6" />
+                                        <line x1="6" x2="6" y1="18" y2="18" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex items-center justify-between">
+                                <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">{{ $totalEquipamentos }}</p>
+                                <span class="text-sm text-gray-500 dark:text-gray-400">Equipamentos registrados</span>
                             </div>
                         </div>
                     </div>
-                    <div class="p-4">
-                        <div class="flex items-center justify-between">
-                            <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">{{ $totalEquipamentos }}</p>
-                            <span class="text-sm text-gray-500 dark:text-gray-400">Equipamentos registrados</span>
-                        </div>
-                    </div>
-                </div>
+                </a>
 
                 <!-- Equipamentos em Estoque -->
-                <div
-                    class="bg-white dark:bg-gray-700 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-600">
+                <a href="{{ route('equipamentos.index') }}">
+
                     <div
-                        class="p-4 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 border-b border-green-100 dark:border-green-700/50">
-                        <div class="flex items-center justify-between">
-                            <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-200">Em Estoque</h2>
-                            <div class="bg-green-500 text-white p-2 rounded-lg shadow-md">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="lucide lucide-package">
-                                    <path d="M16.5 9.4 7.55 4.24" />
-                                    <path
-                                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-                                    <path d="M3.27 6.96 12 12.01l8.73-5.05" />
-                                    <path d="M12 22.08V12" />
-                                </svg>
+                        class="bg-white dark:bg-gray-700 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-600">
+                        <div
+                            class="p-4 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 border-b border-green-100 dark:border-green-700/50">
+                            <div class="flex items-center justify-between">
+                                <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-200">Em Estoque</h2>
+                                <div class="bg-green-500 text-white p-2 rounded-lg shadow-md">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-package">
+                                        <path d="M16.5 9.4 7.55 4.24" />
+                                        <path
+                                            d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                                        <path d="M3.27 6.96 12 12.01l8.73-5.05" />
+                                        <path d="M12 22.08V12" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex items-center justify-between">
+                                <p class="text-3xl font-bold text-green-600 dark:text-green-400">{{ $equipamentosEstoque }}
+                                </p>
+                                <span class="text-sm text-gray-500 dark:text-gray-400">Disponíveis</span>
                             </div>
                         </div>
                     </div>
-                    <div class="p-4">
-                        <div class="flex items-center justify-between">
-                            <p class="text-3xl font-bold text-green-600 dark:text-green-400">{{ $equipamentosEstoque }}</p>
-                            <span class="text-sm text-gray-500 dark:text-gray-400">Disponíveis</span>
-                        </div>
-                    </div>
-                </div>
+                </a>
 
                 <!-- Equipamentos em Uso -->
-                <div
-                    class="bg-white dark:bg-gray-700 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-600">
+                <a href="{{ route('equipamentos.index') }}">
+
                     <div
-                        class="p-4 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30 border-b border-purple-100 dark:border-purple-700/50">
-                        <div class="flex items-center justify-between">
-                            <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-200">Em Uso</h2>
-                            <div class="bg-purple-500 text-white p-2 rounded-lg shadow-md">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="lucide lucide-laptop">
-                                    <path
-                                        d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45L4 16" />
-                                </svg>
+                        class="bg-white dark:bg-gray-700 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-600">
+                        <div
+                            class="p-4 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30 border-b border-purple-100 dark:border-purple-700/50">
+                            <div class="flex items-center justify-between">
+                                <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-200">Em Uso</h2>
+                                <div class="bg-purple-500 text-white p-2 rounded-lg shadow-md">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-laptop">
+                                        <path
+                                            d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45L4 16" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex items-center justify-between">
+                                <p class="text-3xl font-bold text-purple-600 dark:text-purple-400">{{ $equipamentosEmUso }}
+                                </p>
+                                <span class="text-sm text-gray-500 dark:text-gray-400">Em operação</span>
                             </div>
                         </div>
                     </div>
-                    <div class="p-4">
-                        <div class="flex items-center justify-between">
-                            <p class="text-3xl font-bold text-purple-600 dark:text-purple-400">{{ $equipamentosEmUso }}</p>
-                            <span class="text-sm text-gray-500 dark:text-gray-400">Em operação</span>
-                        </div>
-                    </div>
-                </div>
+                </a>
 
                 <!-- Manutenções Abertas -->
-                <div
-                    class="bg-white dark:bg-gray-700 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-600">
+                <a href="{{ route('manutencao.index') }}">
                     <div
-                        class="p-4 bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/30 dark:to-red-800/30 border-b border-red-100 dark:border-red-700/50">
-                        <div class="flex items-center justify-between">
-                            <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-200">Manutenções</h2>
-                            <div class="bg-red-500 text-white p-2 rounded-lg shadow-md">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="lucide lucide-alert-triangle">
-                                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
-                                    <path d="M12 9v4" />
-                                    <path d="M12 17h.01" />
-                                </svg>
+                        class="bg-white dark:bg-gray-700 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-600">
+                        <div
+                            class="p-4 bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/30 dark:to-red-800/30 border-b border-red-100 dark:border-red-700/50">
+                            <div class="flex items-center justify-between">
+                                <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-200">Manutenções</h2>
+                                <div class="bg-red-500 text-white p-2 rounded-lg shadow-md">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alert-triangle">
+                                        <path
+                                            d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                                        <path d="M12 9v4" />
+                                        <path d="M12 17h.01" />
+                                    </svg>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="p-4">
-                        <div class="flex items-center justify-between">
-                            <p class="text-3xl font-bold text-red-600 dark:text-red-400">{{ $manutencoesAbertas }}</p>
-                            <span class="text-sm text-gray-500 dark:text-gray-400">Pendentes</span>
+
+                        <div class="p-4">
+                            <div class="flex items-center justify-between">
+                                <p class="text-3xl font-bold text-red-600 dark:text-red-400">{{ $manutencoesAbertas }}</p>
+                                <span class="text-sm text-gray-500 dark:text-gray-400">Pendentes</span>
+                            </div>
                         </div>
+
+
                     </div>
-                </div>
+                </a>
             </div>
 
             <!-- Charts Section -->
@@ -349,7 +367,7 @@
                 }
             });
 
-          
+
         });
     </script>
 
