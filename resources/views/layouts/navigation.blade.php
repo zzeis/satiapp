@@ -19,6 +19,16 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
+
+                    @auth
+                    @if (in_array(auth()->user()->nivel, [2, 3]))
+                        <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
+                            <i data-lucide="user" class="w-5 h-5 inline-block mr-1"></i>
+                            {{ __('Usuarios') }}
+                        </x-nav-link>
+                    @endif
+                @endauth
+
                     <!-- Equipamentos -->
                     <x-nav-link :href="route('equipamentos.index')" :active="request()->routeIs('equipamentos.*')">
                         <i data-lucide="server" class="w-5 h-5 inline-block mr-1"></i>
