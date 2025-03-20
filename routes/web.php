@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EquipamentoController;
 use App\Http\Controllers\ManutencaoController;
 use App\Http\Controllers\PessoaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TermoEntregaController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -54,9 +56,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/pessoa/buscar-por-nome', [PessoaController::class, 'buscarPorNome'])->name('pessoa.buscar-por-nome');
 });
 
+Route::middleware(['auth', 'verified', 'user.status', 'user.level:2,3'])->group(function () {
 
+    Route::get('users', [AdminController::class, 'index'])->name('users.index');
+    Route::put('users/{user}/status', [AdminController::class, 'updateStatus'])->name('users.updateStatus');
+    Route::put('users/{user}/level', [AdminController::class, 'updateLevel'])->name('users.updateLevel');
+});
 //rotas Termo de entrega
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', 'user.status'])->group(function () {
     Route::get('TermoDeEntrega', [TermoEntregaController::class, 'index'])->name('termo.index');
     Route::get('TermoDeEntrega/create', [TermoEntregaController::class, 'create'])->name('termo.create');
     Route::post('TermoDeEntrega/store', [TermoEntregaController::class, 'store'])->name('termo.store');
@@ -77,7 +84,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 //rotas manutenção 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', 'user.status'])->group(function () {
     Route::get('manutencao', [ManutencaoController::class, 'index'])->name('manutencao.index');
     Route::get('manutencao/create', [ManutencaoController::class, 'create'])->name('manutencao.create');
     Route::post('manutencao/store', [ManutencaoController::class, 'store'])->name('manutencao.store');
@@ -100,7 +107,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/manutencao/{manutencao}/informacoes', [ManutencaoController::class, 'informacoes'])->name('manutencao.informacoes');
 });
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', 'user.status'])->group(function () {
 
     Route::get('equipamentos', [EquipamentoController::class, 'index'])->name('equipamentos.index');
     Route::get('equipamentos/create', [EquipamentoController::class, 'create'])->name('equipamentos.create');

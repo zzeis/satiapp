@@ -4,8 +4,6 @@
 
 @section('content')
     <div class="container mx-auto px-4 py-8">
-
-
         <!-- Header with Actions -->
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
             <div class="flex items-center mb-4 sm:mb-0">
@@ -277,6 +275,20 @@
                                                 Série</dt>
                                             <dd class="text-sm text-gray-900 dark:text-gray-100">
                                                 {{ $manutencao->equipamento->numero_serie }}</dd>
+                                        </div>
+
+                                        <div class="flex justify-between">
+                                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Propriedade
+                                            </dt>
+                                            <dd class="text-sm text-gray-900 dark:text-gray-100">
+                                                @if ($manutencao->equipamento->tipo_propriedade == 'municipal')
+                                                    Patrimônio Municipal
+                                                @elseif ($manutencao->equipamento->tipo_propriedade == 'alugado')
+                                                    Alugado
+                                                @else
+                                                    {{ ucfirst($manutencao->equipamento->tipo_propriedade) }}
+                                                @endif
+                                            </dd>
                                         </div>
 
                                         <div class="flex justify-between">
