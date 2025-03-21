@@ -77,14 +77,7 @@ class ManutencaoController extends Controller
         // Busca o equipamento pelo número de série
         $equipamento = Equipamento::where('numero_serie', $request->numero_serie)->first();
         // Registra a movimentação de conclusão
-        Movimentacoes::create([
 
-            'equipamento_id' => $equipamento->id,
-            'data' => Date::now(),
-            'acao' => 'abertura_manutencao',
-            'data_conclusao' => Date::now(),
-            'descricao' => 'Solicitação de manutenção.',
-        ]);
         // Cria a manutenção
         $manutencao = Manutencao::create([
             'equipamento_id' => $equipamento->id,
@@ -97,10 +90,19 @@ class ManutencaoController extends Controller
             'observacoes' => $request->observacoes,
         ]);
 
+        Movimentacoes::create([
+            'manutencao_id' => $manutencao->id,
+            'equipamento_id' => $equipamento->id,
+            'data' => Date::now(),
+            'acao' => 'abertura_manutencao',
+            'data_conclusao' => Date::now(),
+            'descricao' => 'Solicitação de manutenção.',
+        ]);
+
         if ($equipamento->tipo_propriedade == 'alugado') {
             // Envia e-mail para a empresa terceirizada
 
-           
+
             Mail::to('posygame@gmail.com')->queue(
                 (new SolicitacaoManutencao($manutencao))->onQueue('redis')
             );
@@ -117,6 +119,7 @@ class ManutencaoController extends Controller
         // Atualiza o status e registra a conclusão
         $manutencao->status = 'concluido';
         $manutencao->observacoes = $request->input('observacoes') . ' - ' . $request->input('status');
+        $manutencao->data_conclusao = now();
         $manutencao->save();
 
         // Registra a movimentação de conclusão
@@ -124,7 +127,7 @@ class ManutencaoController extends Controller
             'manutencao_id' => $manutencao->id,
             'equipamento_id' => $manutencao->equipamento->id,
             'data' => Date::now(),
-            'acao' => $request->input('status'),
+            'acao' => $request->input('status') . '_manutencao_concluida',
             'data_conclusao' => Date::now(),
             'descricao' => 'Manutenção concluída.',
         ]);
@@ -402,7 +405,7 @@ class ManutencaoController extends Controller
             'tipo' => 'Cancelamento de manutencao',
             'acao' => 'Cancelamento',
             'data' => now(),
-            'observacoes' => 'Cancelamento da manutenção',
+            'descricao' => 'Cancelamento da manutenção',
         ]);
 
         $emailDestino = env('MAIL_DESTINO_CANCELAMENTO');
