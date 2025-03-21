@@ -15,8 +15,12 @@ class MovimentacoesController extends Controller
     public function index(Request $request)
     {
         // Consulta base para movimentações
-        $query = Movimentacoes::with(['equipamento', 'user']);
-
+        $query = Movimentacoes::with([
+            'equipamento' => function ($query) {
+                $query->withTrashed();
+            },
+            'user'
+        ]);
         // Filtro por usuário
         if ($request->has('user_id') && $request->user_id) {
             $query->where('user_id', $request->user_id);
@@ -45,7 +49,7 @@ class MovimentacoesController extends Controller
         $users = User::all();
 
 
-       
+
 
 
         // Minhas Movimentações
@@ -62,13 +66,13 @@ class MovimentacoesController extends Controller
     {
         // Carrega os relacionamentos necessários
         $movimentacao->load([
-            'equipamento',
+            'equipamento' => function ($query) {
+                $query->withTrashed();
+            },
             'user',
             'manutencao',
             'termo'
         ]);
-
-
 
         return view('movimentacoes.detalhes', compact('movimentacao'));
     }
