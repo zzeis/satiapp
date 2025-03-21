@@ -39,16 +39,17 @@ class DashboardController extends Controller
             'estoque' => Equipamento::where('status', 'estoque')->count(),
         ];
 
-        // Atividades recentes
+
         // Atividades recentes
         $atividadesRecentes = Movimentacoes::with(['equipamento'])
             ->latest()
             ->take(5)
             ->get();;
 
-        
 
 
+        // Minhas Movimentações
+        $minhasMovimentacoes = Movimentacoes::where('user_id', auth()->id())->count();
 
         return view('dashboard.index', compact(
             'totalEquipamentos',
@@ -58,7 +59,8 @@ class DashboardController extends Controller
             'secretarias',
             'distribuicaoPorTipo',
             'statusEquipamentos',
-            'atividadesRecentes'
+            'atividadesRecentes',
+            'minhasMovimentacoes'
         ));
     }
 }
