@@ -40,12 +40,13 @@ class DashboardController extends Controller
         ];
 
 
-        // Atividades recentes
-        $atividadesRecentes = Movimentacoes::with(['equipamento'])
+        // Atividades recentes - Modificação para incluir equipamentos soft deleted
+        $atividadesRecentes = Movimentacoes::with(['equipamento' => function ($query) {
+            $query->withTrashed(); // Inclui equipamentos que foram soft deleted
+        }])
             ->latest()
             ->take(5)
-            ->get();;
-
+            ->get();
 
 
         // Minhas Movimentações
