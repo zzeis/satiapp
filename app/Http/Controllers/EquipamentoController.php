@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Equipamento;
+use App\Models\Logs;
+use App\Models\Movimentacoes;
 use App\Models\Pessoa;
 use App\Models\Secretaria;
 use App\Models\TipoEquipamento;
@@ -89,7 +91,17 @@ class EquipamentoController extends Controller
 
 
 
-        Equipamento::create($request->all());
+        // Armazena o equipamento criado em uma variável
+        $equipamento = Equipamento::create($request->all());
+
+        // Agora você pode usar $equipamento->id
+        Movimentacoes::create([
+            'equipamento_id' => $equipamento->id,
+            'data' => now(),
+            'acao' => 'cadastro_equipamento',
+            'user_id' => auth()->id(),
+            'descricao' => 'Adicionando novo equipamento ao sistema',
+        ]);
 
         return redirect()
             ->route('equipamentos.create')
@@ -145,6 +157,11 @@ class EquipamentoController extends Controller
                 ->withInput();
         }
 
+        Logs::create([
+            'acao' => 'Atualização de Equipamento',
+            'detalhes' => "Equipamento #{$equipamento->id}: " . implode(', ', $request->all()),
+            'user_id' => auth()->id()
+        ]);
         $equipamento->update($request->all());
 
         return redirect()
@@ -251,7 +268,7 @@ class EquipamentoController extends Controller
             $query->where('secretaria_id', $request->secretaria_id);
         }
 
-        $equipamentos = $query->with('tipo')->paginate(10, ['id', 'numero_serie', 'modelo', 'tipo_id', 'status','tipo_propriedade']);
+        $equipamentos = $query->with('tipo')->paginate(10, ['id', 'numero_serie', 'modelo', 'tipo_id', 'status', 'tipo_propriedade']);
 
         return response()->json($equipamentos);
     }
