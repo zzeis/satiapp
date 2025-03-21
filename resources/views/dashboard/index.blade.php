@@ -6,14 +6,39 @@
             <!-- Dashboard Header -->
             <div class="relative bg-gradient-to-r from-blue-600 to-gray-600 px-6 py-8">
                 <div class="absolute inset-0 bg-black opacity-10 pattern-dots"></div>
-                <h1 class="text-3xl font-bold text-white relative z-10">Dashboard</h1>
-                <p class="text-indigo-100 mt-2 relative z-10">Visão geral do sistema de gerenciamento de equipamentos</p>
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between relative z-10">
+                    <div>
+                        <h1 class="text-3xl font-bold text-white">Dashboard</h1>
+                        <p class="text-indigo-100 mt-2">Visão geral do sistema de gerenciamento de equipamentos</p>
+                    </div>
+
+                    <!-- Minhas Movimentações - Moved to header area -->
+                    <a href="{{ route('movimentacoes.index') }}"
+                        class="mt-4 md:mt-0 flex items-center bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-colors duration-300 rounded-xl p-3 border border-white/20 group">
+                        <div
+                            class="bg-yellow-500 text-white p-2 rounded-lg shadow-md mr-3 group-hover:bg-yellow-600 transition-colors duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="lucide lucide-activity">
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm text-yellow-100">Minhas Movimentações</p>
+                            <p class="text-xl font-bold text-white">{{ $minhasMovimentacoes }} <span
+                                    class="text-xs font-normal text-yellow-100">Realizadas</span></p>
+                        </div>
+                    </a>
+                </div>
             </div>
 
             <!-- Metric Cards -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-6">
+
+
                 <!-- Total de Equipamentos -->
                 <a href="{{ route('equipamentos.index') }}">
+
 
                     <div
                         class="bg-white dark:bg-gray-700 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-600">
@@ -115,7 +140,8 @@
                                 <div class="bg-red-500 text-white p-2 rounded-lg shadow-md">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alert-triangle">
+                                        stroke-linecap="round" stroke-linejoin="round"
+                                        class="lucide lucide-alert-triangle">
                                         <path
                                             d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
                                         <path d="M12 9v4" />
@@ -137,8 +163,10 @@
                 </a>
             </div>
 
+
+
             <!-- Charts Section -->
-            <div class="p-6 space-y-6">
+            <div class="p-6 space-y-6 border-t border-gray-200 dark:border-gray-700">
                 <!-- Equipamentos por Secretaria Chart -->
                 <div
                     class="bg-white dark:bg-gray-700 rounded-xl shadow-md p-6 border border-gray-100 dark:border-gray-600">
@@ -175,11 +203,24 @@
                 </div>
             </div>
 
-            <!-- Recent Activity Section -->
+
             <!-- Recent Activity Section -->
             <div class="p-6 border-t border-gray-200 dark:border-gray-700">
-                <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200 mb-4">Atividades Recentes</h2>
-                <div class="overflow-x-auto">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200">Atividades Recentes</h2>
+                    <a href="{{ route('movimentacoes.index') }}"
+                        class="text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium flex items-center">
+                        Ver todas
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" class="ml-1">
+                            <path d="M5 12h14" />
+                            <path d="m12 5 7 7-7 7" />
+                        </svg>
+                    </a>
+                </div>
+                <div
+                    class="overflow-x-auto bg-white dark:bg-gray-700 rounded-xl shadow-md border border-gray-100 dark:border-gray-600">
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead class="bg-gray-50 dark:bg-gray-800">
                             <tr>
@@ -199,12 +240,22 @@
                         </thead>
                         <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                             @foreach ($atividadesRecentes as $atividade)
-                                <tr>
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors duration-150">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
                                         {{ $atividade->equipamento->tipo->nome }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
-                                        <span
-                                            class="px-2 py-1 text-xs rounded-full {{ $atividade->acao === 'Atribuído' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300' }}">
+                                        @php
+                                            $actionClasses = match (strtolower($atividade->acao)) {
+                                                'atribuído',
+                                                'atribuido'
+                                                    => 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+                                                'removido'
+                                                    => 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+                                                default
+                                                    => 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+                                            };
+                                        @endphp
+                                        <span class="px-2 py-1 text-xs rounded-full {{ $actionClasses }}">
                                             {{ $atividade->acao }}
                                         </span>
                                     </td>
@@ -408,8 +459,9 @@
             animation-delay: 0.3s;
         }
 
-        .grid>div:nth-child(4) {
-            animation-delay: 0.4s;
+        /* Additional dark mode color for hover effect */
+        .dark .dark\:hover\:bg-gray-750:hover {
+            background-color: rgba(55, 65, 81, 0.8);
         }
     </style>
 @endsection

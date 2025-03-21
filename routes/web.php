@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EquipamentoController;
 use App\Http\Controllers\ManutencaoController;
+use App\Http\Controllers\MovimentacoesController;
 use App\Http\Controllers\PessoaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TermoEntregaController;
@@ -56,6 +57,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/pessoa/buscar-por-nome', [PessoaController::class, 'buscarPorNome'])->name('pessoa.buscar-por-nome');
 });
 
+//rotas movimentacoes
+Route::middleware(['auth', 'verified', 'user.status'])->group(function () {
+
+    Route::get('movimentacoes', [MovimentacoesController::class, 'index'])->name('movimentacoes.index');
+    Route::get('movimentacoes/{movimentacao}/detalhes', [MovimentacoesController::class, 'detalhes'])->name('movimentacoes.detalhes');
+
+});
+
+//rotas usuarios 
 Route::middleware(['auth', 'verified', 'user.status', 'user.level:2,3'])->group(function () {
 
     Route::get('users', [AdminController::class, 'index'])->name('users.index');

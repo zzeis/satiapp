@@ -15,7 +15,8 @@ class Movimentacoes extends Model
         'data',
         'descricao',
         'equipamento_id',
-        'termo_id'
+        'termo_id',
+        
 
     ];
 
@@ -30,8 +31,14 @@ class Movimentacoes extends Model
     }
     public function manutencao()
     {
-        return $this->belongsTo(Manutencao::class, 'id');
+        return $this->belongsTo(Manutencao::class);
     }
+
+    public function Termo()
+    {
+        return $this->belongsTo(TermoEntrega::class);
+    }
+
 
     protected static function boot()
     {

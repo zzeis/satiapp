@@ -39,16 +39,18 @@ class DashboardController extends Controller
             'estoque' => Equipamento::where('status', 'estoque')->count(),
         ];
 
-        // Atividades recentes
-        // Atividades recentes
-        $atividadesRecentes = Movimentacoes::with(['equipamento'])
+
+        // Atividades recentes - Modificação para incluir equipamentos soft deleted
+        $atividadesRecentes = Movimentacoes::with(['equipamento' => function ($query) {
+            $query->withTrashed(); // Inclui equipamentos que foram soft deleted
+        }])
             ->latest()
             ->take(5)
-            ->get();;
-
-        
+            ->get();
 
 
+        // Minhas Movimentações
+        $minhasMovimentacoes = Movimentacoes::where('user_id', auth()->id())->count();
 
         return view('dashboard.index', compact(
             'totalEquipamentos',
@@ -58,7 +60,8 @@ class DashboardController extends Controller
             'secretarias',
             'distribuicaoPorTipo',
             'statusEquipamentos',
-            'atividadesRecentes'
+            'atividadesRecentes',
+            'minhasMovimentacoes'
         ));
     }
 }
