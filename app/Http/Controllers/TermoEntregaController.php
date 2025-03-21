@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Jobs\ProcessarPdfTermo;
 use App\Models\Equipamento;
+use App\Models\Log;
+use App\Models\Logs;
 use App\Models\Movimentacoes;
 use App\Models\Pessoa;
 use App\Models\Secretaria;
@@ -281,6 +283,18 @@ class TermoEntregaController extends Controller
         DB::beginTransaction();
 
         try {
+            // Salvar valores originais para depois comparar o que foi alterado
+            $originalPessoa = null;
+            if ($termoEntrega->responsavel) {
+                $originalPessoa = collect([
+                    'nome' => $termoEntrega->responsavel->nome,
+                    'secretaria_id' => $termoEntrega->responsavel->secretaria_id,
+                    'cpf' => $termoEntrega->responsavel->cpf,
+                ]);
+            }
+
+            $originalObservacoes = $termoEntrega->observacoes;
+
             // Update or create the person
             $pessoa = Pessoa::updateOrCreate(
                 ['cpf' => $request->cpf],
@@ -298,6 +312,42 @@ class TermoEntregaController extends Controller
                 'arquivo_path' => 'processando', // Will be updated by the job
                 'processado' => false // Mark as not processed to regenerate PDF
             ]);
+
+            // Registrar log SOMENTE de alteração de dados da pessoa ou do termo
+            $alteracoes = [];
+
+            // Verificar alterações nos dados da pessoa
+            if ($originalPessoa) {
+                if ($originalPessoa['nome'] != $request->nome) {
+                    $alteracoes[] = "Nome alterado de '{$originalPessoa['nome']}' para '{$request->nome}'";
+                }
+
+                if ($originalPessoa['secretaria_id'] != $request->secretaria_id) {
+                    $secretariaOriginal = Secretaria::find($originalPessoa['secretaria_id'])->nome ?? 'Desconhecida';
+                    $secretariaNova = Secretaria::find($request->secretaria_id)->nome ?? 'Desconhecida';
+                    $alteracoes[] = "Secretaria alterada de '{$secretariaOriginal}' para '{$secretariaNova}'";
+                }
+
+                if ($originalPessoa['cpf'] != $request->cpf) {
+                    $alteracoes[] = "CPF alterado de '{$originalPessoa['cpf']}' para '{$request->cpf}'";
+                }
+            } else {
+                $alteracoes[] = "Novo responsável: {$pessoa->nome}";
+            }
+
+            // Verificar alteração nas observações
+            if ($originalObservacoes != $request->observacoes) {
+                $alteracoes[] = "Observações atualizadas";
+            }
+
+            // Se houve alterações nos dados da pessoa ou do termo, registrar no log
+            if (count($alteracoes) > 0) {
+                Logs::create([
+                    'acao' => 'Atualização de Termo',
+                    'detalhes' => "Termo #{$termoEntrega->id}: " . implode(', ', $alteracoes),
+                    'user_id' => auth()->id()
+                ]);
+            }
 
             // Handle equipment changes
 
@@ -322,7 +372,7 @@ class TermoEntregaController extends Controller
                         ->where('equipamento_id', $equipamentoId)
                         ->delete();
 
-                    // Log the equipment removal
+                    // Log the equipment removal - usando a tabela Movimentacoes
                     Movimentacoes::create([
                         'equipamento_id' => $equipamento->id,
                         'descricao' => 'Equipamento removido do termo ' . $termoEntrega->id,
@@ -360,7 +410,7 @@ class TermoEntregaController extends Controller
                         'secretaria_id' => $pessoa->secretaria_id
                     ]);
 
-                    // Log the equipment addition
+                    // Log the equipment addition - usando a tabela Movimentacoes
                     Movimentacoes::create([
                         'equipamento_id' => $equipamento->id,
                         'descricao' => 'Equipamento adicionado ao termo para ' . $pessoa->nome,
