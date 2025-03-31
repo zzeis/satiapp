@@ -116,12 +116,15 @@ class EquipamentoController extends Controller
     // Função para exibir detalhes da manutenção
     public function detalhes(Equipamento $equipamento)
     {
+
+
         // Carrega as relações necessárias
         $equipamento->load([
             'manutencoes', // Novo equipamento (se houver)
             'movimentacoes', // Movimentações relacionadas
             'movimentacoes.user', // Usuário que realizou a movimentação
             'user',
+            'anotacoes.user',
         ]);
 
 
