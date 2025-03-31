@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AnotacaoController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EquipamentoController;
 use App\Http\Controllers\ManutencaoController;
@@ -57,12 +58,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/pessoa/buscar-por-nome', [PessoaController::class, 'buscarPorNome'])->name('pessoa.buscar-por-nome');
 });
 
+//rotas anotacoes 
+Route::middleware('auth')->group(function () {
+    Route::post('anotacoes', [AnotacaoController::class, 'store'])->name('anotacoes.store');
+    Route::delete('anotacoes/{anotacao}', [AnotacaoController::class, 'destroy'])->name('anotacoes.destroy');
+    Route::put('anotacoes/{anotacao}', [AnotacaoController::class, 'update'])->name('anotacoes.update');
+});
+
 //rotas movimentacoes
 Route::middleware(['auth', 'verified', 'user.status'])->group(function () {
 
     Route::get('movimentacoes', [MovimentacoesController::class, 'index'])->name('movimentacoes.index');
     Route::get('movimentacoes/{movimentacao}/detalhes', [MovimentacoesController::class, 'detalhes'])->name('movimentacoes.detalhes');
-
 });
 
 //rotas usuarios 
