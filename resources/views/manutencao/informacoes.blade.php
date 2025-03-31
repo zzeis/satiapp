@@ -4,7 +4,11 @@
 
 @section('content')
     <div class="container mx-auto px-4 py-8">
+
+       
         <!-- Header with Actions -->
+
+        
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
             <div class="flex items-center mb-4 sm:mb-0">
                 <div class="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg mr-3">
@@ -16,6 +20,7 @@
                     </svg>
                 </div>
                 <div>
+                    
                     <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
                         Manutenção #{{ $manutencao->id }}
                     </h1>
@@ -25,6 +30,7 @@
                 </div>
             </div>
 
+            
             <div class="flex space-x-3">
                 <a href="{{ route('manutencao.index') }}"
                     class="inline-flex items-center px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200">
@@ -41,6 +47,9 @@
             </div>
         </div>
 
+        <x-anotacoes :model="$manutencao" tipo="manutencao"/>
+
+        
         <!-- Status Badge -->
         <div class="mb-8">
             @php
