@@ -5,6 +5,8 @@
         <div
             class="bg-white dark:bg-gray-800 shadow-xl rounded-xl overflow-hidden border border-gray-100 dark:border-gray-700 transition-all duration-300">
             <!-- Cabeçalho -->
+
+            
             <div class="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 px-6 py-5">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
@@ -45,6 +47,7 @@
                 </div>
             </div>
 
+            <x-anotacoes :model="$termoEntrega" tipo="termoEntrega" />
             <!-- Corpo do Card -->
             <div class="p-6 md:p-8">
                 <!-- Dados do Responsável e do Termo -->

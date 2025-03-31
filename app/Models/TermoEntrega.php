@@ -11,11 +11,11 @@ class TermoEntrega extends Model
 {
     use HasUlids;
 
-    protected $keyType = 'string'; 
+    protected $keyType = 'string';
     protected $fillable = [
         'arquivo_path',
         'data_entrega',
-        'observacoes' ,
+        'observacoes',
         'responsavel_id',
         'secretaria_id',
         'user_id',
@@ -24,7 +24,7 @@ class TermoEntrega extends Model
         'observacoes',
         'status',
         'processado'
-        
+
     ];
 
     public function equipamento()
@@ -55,7 +55,11 @@ class TermoEntrega extends Model
     }
 
     public function usuarioDevolucao()
-{
-    return $this->belongsTo(User::class, 'user_devolucao_id');
-}
+    {
+        return $this->belongsTo(User::class, 'user_devolucao_id');
+    }
+    public function anotacoes()
+    {
+        return $this->hasMany(Anotacao::class, 'id_termoEntrega');
+    }
 }

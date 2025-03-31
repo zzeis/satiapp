@@ -57,6 +57,7 @@ services:
             MYSQL_USER: ${DB_USERNAME:-laravel}
         volumes:
             - ./.docker/mysql/dbdata:/var/lib/mysql
+            - ./my.cnf:/root/.my.cnf
         ports:
             - "5556:3306"
         networks:
