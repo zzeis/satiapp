@@ -54,8 +54,13 @@ class Manutencao extends Model
         return $this->belongsTo(Equipamento::class, 'equipamento_novo_id');
     }
 
-    
-    
+    public function anotacoes()
+    {
+        return $this->hasMany(Anotacao::class, 'id_manutencao');
+    }
+
+
+
     public function getEquipamentoInfoAttribute()
     {
         if ($this->equipamento) {

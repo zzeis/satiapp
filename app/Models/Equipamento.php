@@ -28,7 +28,7 @@ class Equipamento extends Model
         'user_id',
         'especificacoes',
         'data_chegada',
-        'data_ultima_manutencao', 
+        'data_ultima_manutencao',
         'tipo_propriedade'
     ];
 
@@ -49,13 +49,13 @@ class Equipamento extends Model
 
     public function movimentacoes()
     {
-        return $this->hasMany(Movimentacoes::class , 'equipamento_id');
+        return $this->hasMany(Movimentacoes::class, 'equipamento_id');
     }
 
 
     public function manutencoes()
     {
-        return $this->hasMany(Manutencao::class , 'equipamento_id');
+        return $this->hasMany(Manutencao::class, 'equipamento_id');
     }
 
     public function user()
@@ -77,7 +77,7 @@ class Equipamento extends Model
         });
     }
 
-      /**
+    /**
      * Mutator para o campo "modelo".
      * Converte o valor para maiúsculas antes de salvar no banco de dados.
      *
@@ -98,5 +98,10 @@ class Equipamento extends Model
         return $this->belongsToMany(TermoEntrega::class, 'termo_equipamentos', 'equipamento_id', 'termo_id')
             ->withPivot('quantidade') // Adiciona a coluna 'quantidade' ao relacionamento
             ->withTimestamps(); // Adiciona os timestamps ao relacionamento
+    }
+
+    public function anotacoes()
+    {
+        return $this->hasMany(Anotacao::class, 'id_equipamento');
     }
 }
