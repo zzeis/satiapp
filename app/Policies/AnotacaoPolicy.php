@@ -45,7 +45,7 @@ class AnotacaoPolicy
      */
     public function delete(User $user, Anotacao $anotacao)
     {
-        return $user->id === $anotacao->user_id || $user->hasRole('admin');
+        return $user->id === $anotacao->user_id;
     }
 
     /**
