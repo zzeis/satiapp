@@ -18,13 +18,17 @@ class EquipamentoController extends Controller
     {
         // Filtros
         $secretariaId = $request->input('secretaria');
+        $tipoId = $request->input('tipo'); // Novo filtro
         $search = $request->input('search');
         $status = $request->input('status');
 
         // Consulta
-        $equipamentos = Equipamento::with(['responsavel', 'user', 'secretaria'])
+        $equipamentos = Equipamento::with(['responsavel', 'user', 'secretaria', 'tipo']) // Adicionado 'tipo' ao with
             ->when($secretariaId, function ($query, $secretariaId) {
                 return $query->where('secretaria_id', $secretariaId);
+            })
+            ->when($tipoId, function ($query, $tipoId) { // Novo filtro por tipo
+                return $query->where('tipo_id', $tipoId);
             })
             ->when($search, function ($query, $search) {
                 return $query->where(function ($q) use ($search) {
@@ -36,7 +40,7 @@ class EquipamentoController extends Controller
                         ->orWhere('modelo', 'like', "%{$search}%");
                 });
             })
-            ->when($status, function ($query, $status) { // Modificado: adicionada a variável $status como parâmetro
+            ->when($status, function ($query, $status) {
                 return $query->where('status', $status);
             })
             ->orderBy('created_at', 'desc')
@@ -44,8 +48,8 @@ class EquipamentoController extends Controller
             ->appends($request->except('page')); // Mantém os filtros ao navegar pelas páginas
 
         $secretarias = Secretaria::all();
-
-        return view('equipamentos.index', compact('equipamentos', 'secretarias'));
+        $tipos = TipoEquipamento::all();
+        return view('equipamentos.index', compact('equipamentos', 'secretarias', 'tipos'));
     }
 
     public function create()
