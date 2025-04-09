@@ -101,12 +101,7 @@ class ManutencaoController extends Controller
 
         if ($equipamento->tipo_propriedade == 'alugado') {
             // Envia e-mail para a empresa terceirizada
-
-<<<<<<< HEAD
            
-            Mail::to('suporte@lemti.com.br')->queue(
-=======
-
             $emailDestino = env('MAIL_DESTINO');
 
             Mail::to($emailDestino)->queue(
