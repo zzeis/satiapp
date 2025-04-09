@@ -61,12 +61,7 @@
                     @endif
                 </div>
                 
-                @isset($model)
-                    <a href="{{ route('equipamentos.detalhes', $model->id) }}#anotacoes"
-                       class="block mt-2 text-center text-xs text-blue-600 hover:underline">
-                        Ver todas
-                    </a>
-                @endisset
+                
             </div>
         @endif
     </div>
