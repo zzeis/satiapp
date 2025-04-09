@@ -23,7 +23,7 @@ class EquipamentoController extends Controller
         $status = $request->input('status');
 
         // Consulta
-        $equipamentos = Equipamento::with(['responsavel', 'user', 'secretaria', 'tipo']) // Adicionado 'tipo' ao with
+        $equipamentos = Equipamento::with(['responsavel', 'user', 'secretaria', 'tipo', 'anotacoes']) // Adicionado 'tipo' ao with
             ->when($secretariaId, function ($query, $secretariaId) {
                 return $query->where('secretaria_id', $secretariaId);
             })
@@ -49,6 +49,8 @@ class EquipamentoController extends Controller
 
         $secretarias = Secretaria::all();
         $tipos = TipoEquipamento::all();
+
+       
         return view('equipamentos.index', compact('equipamentos', 'secretarias', 'tipos'));
     }
 
