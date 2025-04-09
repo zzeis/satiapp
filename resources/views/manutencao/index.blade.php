@@ -163,6 +163,13 @@
                                         @else
                                             <span class="text-red-500 dark:text-red-400">Equipamento indisponível</span>
                                         @endif
+
+                                        <x-anotacoes-indicator 
+                                        :anotacoes="$manutencao->anotacoes"
+                                        :model="$manutencao"
+                                        showCount="true"
+                                        showPreview="true"
+                                    />
                                     </a>
                                 </td>
 
@@ -225,14 +232,14 @@
                                     {{ \Carbon\Carbon::parse($manutencao->data_abertura)->format('d/m/Y') }}
                                 </td>
 
-                                <td class="px-6 py-4 whitespace-nowrap text-center">
-                                    <div class="flex flex-wrap items-center justify-center gap-2">
+                                <td class="px-6 py-4">
+                                    <div class="flex flex-wrap justify-center gap-2">
                                         <!-- Botão Gerenciar Manutenção -->
                                         @if ($manutencao->status == 'concluido')
                                             <a href="{{ route('manutencao.informacoes', $manutencao->id) }}"
-                                                class="inline-flex items-center px-3 py-1.5 bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200 rounded-md hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors duration-200"
+                                                class="action-btn bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200 hover:bg-blue-200 dark:hover:bg-blue-800"
                                                 title="Ver informações">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                                     class="mr-1">
@@ -242,60 +249,55 @@
                                                     <line x1="8" x2="14" y1="14" y2="14" />
                                                     <line x1="8" x2="10" y1="18" y2="18" />
                                                 </svg>
-                                                Detalhes
+                                                <span>Detalhes</span>
                                             </a>
                                         @endif
 
                                         @if ($manutencao->status == 'em_andamento' || $manutencao->status == 'aberto')
                                             <button onclick="openManageModal('{{ $manutencao->id }}')"
-                                                class="inline-flex items-center px-3 py-1.5 bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-200 rounded-md hover:bg-purple-200 dark:hover:bg-purple-800 transition-colors duration-200">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                class="action-btn bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-200 hover:bg-purple-200 dark:hover:bg-purple-800">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                                     class="mr-1">
                                                     <path d="M12 20h9" />
                                                     <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
                                                 </svg>
-                                                Gerenciar
+                                                <span>Gerenciar</span>
                                             </button>
                                         @endif
 
                                         <!-- Botão Registrar Retirada -->
                                         @if ($manutencao->status == 'aberto')
-                                            <form action="{{ route('manutencao.retirar', $manutencao->id) }}"
-                                                method="POST">
-                                                @csrf
-                                                <input type="hidden" name="local" value="Local de retirada">
-                                                <button type="submit"
-                                                    class="inline-flex items-center px-3 py-1.5 bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-200 rounded-md hover:bg-yellow-200 dark:hover:bg-yellow-800 transition-colors duration-200">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                        class="mr-1">
-                                                        <path d="M5 8h14" />
-                                                        <path d="M5 12h14" />
-                                                        <path d="M5 16h14" />
-                                                        <path d="M3 21h18" />
-                                                        <path d="M9 3v18" />
-                                                        <path d="M15 3v18" />
-                                                    </svg>
-                                                    Retirar
-                                                </button>
-                                            </form>
+                                            <button type="button" onclick="openConfirmRetiradaModal('{{ $manutencao->id }}')"
+                                                class="action-btn bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-200 hover:bg-yellow-200 dark:hover:bg-yellow-800">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="mr-1">
+                                                    <path d="M5 8h14" />
+                                                    <path d="M5 12h14" />
+                                                    <path d="M5 16h14" />
+                                                    <path d="M3 21h18" />
+                                                    <path d="M9 3v18" />
+                                                    <path d="M15 3v18" />
+                                                </svg>
+                                                <span>Retirar</span>
+                                            </button>
                                         @endif
 
                                         @if ($manutencao->status == 'aberto' || $manutencao->status == 'em_andamento')
                                             <button type="button"
                                                 onclick="openConfirmCancelModal('{{ $manutencao->id }}')"
-                                                class="inline-flex items-center px-3 py-1.5 bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-200 rounded-md hover:bg-red-200 dark:hover:bg-red-800 transition-colors duration-200">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                class="action-btn bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-200 hover:bg-red-200 dark:hover:bg-red-800">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                                     class="mr-1">
                                                     <path d="M18 6 6 18" />
                                                     <path d="m6 6 12 12" />
                                                 </svg>
-                                                Cancelar
+                                                <span>Cancelar</span>
                                             </button>
                                         @endif
                                     </div>
@@ -308,10 +310,62 @@
 
             <!-- Paginação -->
             <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-700">
-                {{ $manutencoes->links() }}
+                <div class="pagination-container">
+                    {{ $manutencoes->links() }}
+                </div>
             </div>
         </div>
     </div>
+    
+    <!-- Modal de Confirmação para Retirada -->
+    <div id="confirmRetiradaModal"
+        class="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50 hidden flex items-center justify-center">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 w-full max-w-md mx-4">
+            <div class="flex justify-between items-center mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                <h2 class="text-xl font-bold text-gray-800 dark:text-gray-200 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" class="text-yellow-500 dark:text-yellow-400 mr-2">
+                        <path d="M5 8h14" />
+                        <path d="M5 12h14" />
+                        <path d="M5 16h14" />
+                        <path d="M3 21h18" />
+                        <path d="M9 3v18" />
+                        <path d="M15 3v18" />
+                    </svg>
+                    Confirmar Retirada
+                </h2>
+                <button type="button" onclick="closeConfirmRetiradaModal()"
+                    class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M18 6 6 18" />
+                        <path d="m6 6 12 12" />
+                    </svg>
+                </button>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300 mb-6">
+                Tem certeza de que deseja marcar este equipamento como retirado para manutenção pela empresa? 
+                O status será alterado para "Em Manutenção".
+            </p>
+            <div class="flex justify-end space-x-3">
+                <button type="button" onclick="closeConfirmRetiradaModal()"
+                    class="px-4 py-2.5 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200">
+                    Cancelar
+                </button>
+                <form id="retiradaForm" method="POST" class="inline">
+                    @csrf
+                    <input type="hidden" name="local" value="Local de retirada">
+                    <button type="submit"
+                        class="px-4 py-2.5 bg-yellow-500 text-white font-medium rounded-lg hover:bg-yellow-600 transition-colors duration-200 shadow-sm hover:shadow">
+                        Confirmar Retirada
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
     <!-- Modal de Confirmação para Cancelar Manutenção -->
     <div id="confirmCancelModal"
         class="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50 hidden flex items-center justify-center">
@@ -494,6 +548,74 @@
         .dark .dark\:hover\:bg-gray-750:hover {
             background-color: rgba(55, 65, 81, 0.5);
         }
+
+        /* Make table responsive */
+        .overflow-x-auto {
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Action button styling for consistent size */
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition-property: all;
+            transition-duration: 200ms;
+            width: 100px;
+            height: 32px;
+        }
+
+        /* Compact pagination styling */
+        .pagination-container nav {
+            font-size: 0.875rem;
+        }
+
+        .pagination-container .flex.justify-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pagination-container .relative.inline-flex {
+            padding: 0.25rem 0.5rem !important;
+        }
+
+        .pagination-container span.relative.inline-flex {
+            margin: 0 0.125rem;
+        }
+
+        .pagination-container .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        /* Adjust for small screens */
+        @media (max-width: 640px) {
+            .px-6 {
+                padding-left: 0.75rem;
+                padding-right: 0.75rem;
+            }
+            
+            .action-btn {
+                width: 90px;
+                font-size: 0.75rem;
+                padding: 0.25rem 0.5rem;
+            }
+            
+            .pagination-container nav {
+                font-size: 0.75rem;
+            }
+            
+            .pagination-container .relative.inline-flex {
+                padding: 0.125rem 0.375rem !important;
+            }
+        }
     </style>
 
     <script>
@@ -604,7 +726,24 @@
             }, 200);
         }
 
-        // Function to open the confirmation modal
+        // Function to open the confirmation modal for retirada
+        function openConfirmRetiradaModal(id) {
+            manutencaoId = id;
+            const modal = document.getElementById('confirmRetiradaModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+
+            document.getElementById('retiradaForm').action = `/manutencao/${manutencaoId}/retirar`;
+        }
+
+        // Function to close the confirmation modal for retirada
+        function closeConfirmRetiradaModal() {
+            const modal = document.getElementById('confirmRetiradaModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Function to open the confirmation modal for cancel
         function openConfirmCancelModal(id) {
             manutencaoId = id;
             const modal = document.getElementById('confirmCancelModal');
@@ -614,7 +753,7 @@
             document.getElementById('cancelForm').action = `/manutencao/${manutencaoId}/destroy`;
         }
 
-        // Function to close the confirmation modal
+        // Function to close the confirmation modal for cancel
         function closeConfirmCancelModal() {
             const modal = document.getElementById('confirmCancelModal');
             modal.classList.add('hidden');
@@ -638,6 +777,12 @@
             document.getElementById('confirmCancelModal').addEventListener('click', function(e) {
                 if (e.target === this) {
                     closeConfirmCancelModal();
+                }
+            });
+            
+            document.getElementById('confirmRetiradaModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeConfirmRetiradaModal();
                 }
             });
         });
