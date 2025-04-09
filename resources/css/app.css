@@ -54,3 +54,19 @@
 .note-action-button:active {
     transform: scale(0.95) !important;
 }
+
+
+/* Handwriting font for post-it notes */
+.font-handwriting {
+    font-family: 'Comic Sans MS', 'Segoe Print', 'Bradley Hand', cursive;
+}
+
+/* Animation for the post-it note icon */
+@keyframes wiggle {
+    0%, 100% { transform: rotate(3deg); }
+    50% { transform: rotate(-3deg); }
+}
+
+.wiggle-animation:hover {
+    animation: wiggle 0.5s ease-in-out;
+}

@@ -155,6 +155,12 @@
                                        class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium transition-colors duration-200">
                                         {{ $termo->responsavel->nome }}
                                     </a>
+
+                                    <x-anotacoes-indicator 
+                                    :anotacoes="$termo->anotacoes"
+                                    showCount="false"
+                                    iconSize="lg"
+                                />
                                 </td>
                                
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">

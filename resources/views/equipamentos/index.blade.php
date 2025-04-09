@@ -3,7 +3,7 @@
 @section('title', 'Equipamentos')
 
 @section('content')
-    <div class="container mx-auto px-4 py-8 uh ">
+    <div class="container mx-auto px-4 py-8">
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
             <!-- Header with Title and Action Button -->
             <div
@@ -200,16 +200,22 @@
                                 class="px-6 py-4 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                 Ações
                             </th>
+
                         </tr>
                     </thead>
                     <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         @forelse ($equipamentos as $equipamento)
                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors duration-150">
                                 <td class="px-6 py-4 whitespace-nowrap text-center">
-                                    <a href="{{ route('equipamentos.detalhes', $equipamento->id) }}"
-                                        class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium transition-colors duration-200">
-                                        {{ $equipamento->numero_serie }}
-                                    </a>
+                                    <div class="flex items-center justify-center">
+                                        <a href="{{ route('equipamentos.detalhes', $equipamento->id) }}"
+                                            class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium transition-colors duration-200">
+                                            {{ $equipamento->numero_serie }}
+                                        </a>
+                                        
+                                        <x-anotacoes-indicator :anotacoes="$equipamento->anotacoes" :model="$equipamento" iconSize="sm" />
+
+                                    </div>
                                 </td>
                                 <td
                                     class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-700 dark:text-gray-300">
@@ -325,6 +331,28 @@
         /* Hover effect for dark mode table rows */
         .dark .dark\:hover\:bg-gray-750:hover {
             background-color: rgba(55, 65, 81, 0.5);
+        }
+
+        /* Handwriting font for post-it notes */
+        .font-handwriting {
+            font-family: 'Comic Sans MS', 'Segoe Print', 'Bradley Hand', cursive;
+        }
+
+        /* Animation for the post-it note icon */
+        @keyframes wiggle {
+
+            0%,
+            100% {
+                transform: rotate(3deg);
+            }
+
+            50% {
+                transform: rotate(-3deg);
+            }
+        }
+
+        .wiggle-animation:hover {
+            animation: wiggle 0.5s ease-in-out;
         }
     </style>
 @endsection

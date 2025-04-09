@@ -28,7 +28,7 @@ class TermoEntregaController extends Controller
         $status = $request->input('status'); // Novo filtro por status
 
         // Consulta
-        $termos = TermoEntrega::with(['responsavel', 'usuario', 'secretaria', 'equipamentos'])
+        $termos = TermoEntrega::with(['responsavel', 'usuario', 'secretaria', 'equipamentos', 'anotacoes'])
             ->when($secretariaId, function ($query, $secretariaId) {
                 return $query->where('secretaria_id', $secretariaId);
             })
@@ -464,17 +464,13 @@ class TermoEntregaController extends Controller
         $query->where('status', 'estoque');
 
         // Filter by patrimônio if provided
-        if ($request->has('patrimonio') && !empty($request->patrimonio)) {
-            $query->where('patrimonio', 'like', '%' . $request->patrimonio . '%');
+        if ($request->has('numero_serie') && !empty($request->numero_serie)) {
+            $query->where('numero_serie', 'like', '%' . $request->numero_serie . '%');
         }
 
         // Filter by marca/modelo if provided
-        if ($request->has('marca_modelo') && !empty($request->marca_modelo)) {
-            $search = $request->marca_modelo;
-            $query->where(function ($q) use ($search) {
-                $q->where('marca', 'like', '%' . $search . '%')
-                    ->orWhere('modelo', 'like', '%' . $search . '%');
-            });
+        if ($request->has('modelo') && !empty($request->modelo)) {
+            $query->where('modelo', 'like', '%' . $request->modelo . '%');
         }
 
         // Get results with pagination

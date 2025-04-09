@@ -27,7 +27,7 @@ class ManutencaoController extends Controller
     public function index(Request $request)
     {
         // Query base
-        $query = Manutencao::with(['equipamento', 'equipamentoNovo']);
+        $query = Manutencao::with(['equipamento', 'equipamentoNovo', 'anotacoes']);
 
         // Filtro por status
         if ($request->has('status') && $request->status != '') {
