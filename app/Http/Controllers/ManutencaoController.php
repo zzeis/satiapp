@@ -103,7 +103,9 @@ class ManutencaoController extends Controller
             // Envia e-mail para a empresa terceirizada
 
 
-            Mail::to('posygame@gmail.com')->queue(
+            $emailDestino = env('MAIL_DESTINO');
+
+            Mail::to($emailDestino)->queue(
                 (new SolicitacaoManutencao($manutencao))->onQueue('redis')
             );
         }
@@ -408,7 +410,7 @@ class ManutencaoController extends Controller
             'descricao' => 'Cancelamento da manutenção',
         ]);
 
-        $emailDestino = env('MAIL_DESTINO_CANCELAMENTO');
+        $emailDestino = env('MAIL_DESTINO');
         Mail::to($emailDestino)->queue(
             (new CancelamentoManutencao($manutencao))->onQueue('redis')
         );
