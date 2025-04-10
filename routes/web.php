@@ -78,6 +78,13 @@ Route::middleware(['auth', 'verified', 'user.status', 'user.level:2,3'])->group(
     Route::get('users', [AdminController::class, 'index'])->name('users.index');
     Route::put('users/{user}/status', [AdminController::class, 'updateStatus'])->name('users.updateStatus');
     Route::put('users/{user}/level', [AdminController::class, 'updateLevel'])->name('users.updateLevel');
+
+    Route::get('/dashboard/report', [DashboardController::class, 'showReport'])
+        ->name('dashboard.report');
+
+    // Rota para exportar Excel
+    Route::get('/dashboard/export/excel', [DashboardController::class, 'exportReport'])
+        ->name('dashboard.export.excel');
 });
 //rotas Termo de entrega
 Route::middleware(['auth', 'verified', 'user.status'])->group(function () {
