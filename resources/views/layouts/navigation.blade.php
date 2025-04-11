@@ -19,15 +19,23 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
+                    @auth
+                        @if (in_array(auth()->user()->nivel, [2, 3]))
+                            <x-nav-link :href="route('dashboard.report')" :active="request()->routeIs('dashboard.report')">
+                                <i data-lucide="database" class="w-5 h-5 inline-block mr-1"></i>
+                                {{ __('Relatórios') }}
+                            </x-nav-link>
+                        @endif
+                    @endauth
 
                     @auth
-                    @if (in_array(auth()->user()->nivel, [2, 3]))
-                        <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
-                            <i data-lucide="user" class="w-5 h-5 inline-block mr-1"></i>
-                            {{ __('Usuarios') }}
-                        </x-nav-link>
-                    @endif
-                @endauth
+                        @if (in_array(auth()->user()->nivel, [2, 3]))
+                            <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
+                                <i data-lucide="user" class="w-5 h-5 inline-block mr-1"></i>
+                                {{ __('Usuarios') }}
+                            </x-nav-link>
+                        @endif
+                    @endauth
 
                     <!-- Equipamentos -->
                     <x-nav-link :href="route('equipamentos.index')" :active="request()->routeIs('equipamentos.*')">
